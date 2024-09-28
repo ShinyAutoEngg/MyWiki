@@ -1,0 +1,163 @@
+https://www.youtube.com/watch?v=z3HRPSw5nm0  - Selva 
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+BASIC ORDER OF EXECUTION 
+==========================
+git config --global user.name "GIT USERNAME"
+git config --global user.email "gitrepoEmailID"
+git init
+git remote add origin GIT_REPO_URL
+git status
+git add .
+git commit -m "commit msg"
+git push origin master
+//git pull origin master
+
+------------------------------------------------------------------
+1.git init ----->creates the .git folder in local repo | Initialises local repo
+
+
+2. touch Filename.txt -----> to create a text file
+flow
+-----
+touch Filename.txt
+add .
+git commit -m "message"
+
+
+3.vim filename.txt  -----> to create a text file
+Flow
+-----
+vim filename.txt 
+Press Insert Key 
+Write in the file
+Press escape
+type :wq! and press enter to save the file
+Save or Exit from bash editor :wq! and Press enter
+
+
+4. git add filename  -->move file from unstaged to staged 
+
+5. git add .   -->move all files from unstaged to staged
+
+6. 
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+git log --graph --oneline --all 
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+ls  ---------->list: shows what is inside the current directory
+git log -3 --graph --->shows the last three commits logs of current branch
+git branch -----> list of branches available including master
+git pull -r  
+
+HOW TO CREATE A BRANCH
+========================
+App 1: Create and switch to the branch directly
+git checkout -b branchName
+
+App 2: Create a branch first and then switch 
+git branch BranchName
+git checkout BranchName
+
+App 3: git branch -m master BranchName
+
+HOW TO CREATE A PULL REQUEST
+==============================
+gh pr create --base <master or main>  --head <branchName>  --title "Your PR Title" --body "Description of your pull request"
+
+
+HOW TO ADD A FILE TO GITHUB?
+=============================
+cd D:               ---->get into the directory
+cd Folder/ProjectName     -------->get into the folder
+git init ------>to initialize our repository
+git add filename.txt   -------->to select the file to be added
+git commit -m "commit message"  -------->commit 
+git remote add origin gitURL  ------>pass the url for file to be added to
+git push -u origin master
+git remote ---> gives whether it is origin or not
+git remote -v ------>gives all the remote origins available
+git remote remove origin --------->removes the origin 
+git reflog ----->get the logs
+git checkout master ---------->switch to master(if you are not in master)
+git branch newBranchName  --->create a branch
+git checkout branchName  --->switch to branch from master 
+git checkout -b newBranchName --->create a new branch and switch to the branch
+git push origin branchName  ----> push to branch
+
+HOW TO CLONE A REPOSITORY
+=========================
+create a folder in local for cloning the repo from GitHub
+Copy the git URL for cloning and keep it ready
+Open git terminal
+cd "pathOfTheFolder" ---->enter the location
+git clone "GitRepoURL"  --->Cloning into RepoName
+CLONING A BRANCH
+------------------
+git clone -b branchName "GitURL"
+
+HOW TO FORK A REPO
+===================
+https://cli.github.com/  - download and install the CLI setup
+Desktop - RC - Open Gitbash terminal
+gh --version   --->gives the GitHub version | just to verify
+gh auth login --web > SSH   ----->gives one time code and URL
+copy /paste url in browser ->Authenticate using OTC
+Once completed... Go to gb terminal
+gh repo fork "GitURL" --clone
+
+HOW TO MERGE BRANCH TO MASTER
+=============================
+make changes to branch
+git checkout master ----->go to master 
+git merge branchName  ------>merge the branch to master (this will reflect in local folder but not in git repo, for that you need to push it)
+git push -u origin master ----> merged to master (now it will reflect in master)
+Message in branch : This branch is up to date with master.
+
+HOW TO CLONE FILES FROM MASTER TO BRANCH
+=========================================
+First switch to the specific branch, then merge master and push to branch
+git checkout branch  (switch to branch)
+git merger master (merge master into branch)
+git push origin branch (push the files to branch)
+
+
+ONCE MERGING IS DONE DELETE THE BRANCH
+======================================
+git branch -d branchName  (this will delete only from local folder) 
+Message: deleted my new branch  (only in local not in GitHub)
+git push origin --delete branchName
+
+REBASE  
+======
+git rebase branch1 branch2  --->from which branch to which branch
+
+git checkout branch
+git rebase -i master
+
+cherry-pick
+============
+first checkout to master 
+git checkout master
+git cherry-pick commitID --->commit ID from [git log] command
+
+stash   : only if you have not committed yet
+=====
+to place the commits in staged area in a memory location for later use
+git stash       ----> takes a back up
+git stash list  ----> gives the list in stash with the id 
+git stash pop   -----> brings the last stashed commit to use
+git stash pop 1  ------>give the stash number to
+
+HOW TO HANDLE?
+===============
+$ git push -u origin master
+remote: Permission to ShinyAutoEngg/GitBashRepo.git denied to shinyingrid.
+fatal: unable to access 'https://github.com/ShinyAutoEngg/GitBashRepo.git/': The requested URL returned error: 403
+1.Check the user and git repo
+2.Go to Windows credentials Manager
+3.git credentials are stored - remove
+4.try to push again - it will ask to sign in to GitHub using browser
+5. Allow Authentication and login 
+6.Now try to push again 

@@ -1,0 +1,276 @@
+                                   WebElement Methods
+    Why webelements?(Why not we store in string?)
+-->To perform multiple actions for same element we go for webelements method.
+-----------------------------------------------------------------------------------------------------  
+   mtd name  return type
+1) clear():  void - WebElement
+   -------
+   This method is used to erase the contents from textboxes.
+Ex:-
+    In actitime, For username textfield
+
+                WebElement textfield = driver.findElement(By.cssSelector("[id='username']"));
+	        textfield.sendKeys("admin");
+	        textfield.clear();
+here in above example textfield is a webelement and hence we are able to perform multiple actions on it.
+======================================================================================================
+2) Submit():void-WebElement 
+  ---------
+->This method is used to complete the search action in any webpage.
+->Internally Submit() execute a javascript language code to click on search button.
+->If we use submit() for other operation(apart from search) than we get javascript Exception.
+
+Ex:- 
+   In google to search we use submit()
+              
+            driver.get("https://www.google.com/");
+            WebElement search = driver.findElement(By.name("q"));
+            search.sendKeys("testyantra software solutions pvt ltd");
+            search.submit();
+
+=====================================================================================================
+3) Click():void
+   -------
+->This method is used to perform clicking action on the webelement located by locators.
+
+======================================================================================================
+4) Dimension getSize()
+   ---------
+-> It is used to capture the width and height of the element.
+
+5) Point getLocation()
+   -------------
+-> It is used to capture X and Y co-ordinate distance of element in webpage.
+
+note**
+     This position is calculated relative to the top-left corner of the webpage of which (x,y) co-ordinates are assumed to be (0,0).
+
+6) Rectangle getRect()
+   ---------
+->It provides Dimension and Location of element.
+
+Example for above methods--In eclipse 
+
+======================================================================================================
+7) boolean isDisplayed()
+   ---------------------
+->This method will check whether particular element is visible in user Interface(UI) or not.
+
+8) boolean isEnabled()
+   -------------------
+->This method will check whether element is enabled for action or not.
+
+9) boolean isSelected()
+   --------------------
+->This method will check whether element is selected or not.
+
+Example for above methods:- In eclipse
+
+======================================================================================================
+10) String getAttribute(String AttributeName)
+    -----------------------------------------
+->This method will capture the value present in given attribute.
+note**
+     if attribute is not present then return null.
+
+
+======================================================================================================
+11) String getTagName()
+    -------------------
+-> This method is used to capture the tagname of webelement.
+
+======================================================================================================
+12) String getArialRole()
+   ------------------------
+-> This method is used to get type of webelement. 
+
+======================================================================================================
+13) getScreenshotAs()
+    -----------------
+-> This method is used to capture the screenshot of particular webelement.
+
+Example is in eclipse.
+
+======================================================================================================
+14) getDomAttribute()
+    -----------------
+->This method is used to capture the required attribute value directly from DOM.
+(If attribute name doesnot exist then it will return null)
+
+Nowadays due to ajax Application ,this method is required for accurate capturing of attribute value.
+
+DOM  -> It stands for Document Object Model
+     -> It is a standard document which describes what content html code will have in other words DOM  is the backbone of HTML document.
+     -> It is fixed.
+
+======================================================================================================
+15) getDomProperty()
+    ----------------
+-> This method is used to capture attribute property value from DOM.
+======================================================================================================
+16) getAccessibleName()
+    -------------------
+-> This method is used to capture name of element given in DOM.
+
+======================================================================================================
+17) sendKeys() -> already done
+18) getText()  -> Which is use to print the data or text from the Application.
+======================================================================================================
+
+Program:-
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.Dimension;
+import org.openqa.selenium.Point;
+import org.openqa.selenium.Rectangle;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.edge.EdgeDriver;
+
+import io.github.bonigarcia.wdm.WebDriverManager;
+
+public class WebElementMethods {
+
+	public static void main(String[] args) throws Throwable {
+
+WebDriverManager.edgedriver().setup();
+WebDriver driver=new EdgeDriver();
+
+driver.manage().window().maximize();
+
+//webElement Method1:-getCssValue()
+/*driver.get("https://www.facebook.com");
+WebElement logo = driver.findElement(By.xpath("//img[@alt='Facebook']"));
+String size = logo.getCssValue("font-size");
+	System.out.println(size);
+	
+	String elecolor = logo.getCssValue("color");
+	System.out.println(elecolor);*/
+	
+	//webElement Method2:-sendKeys()
+ /* driver.get("https://demo.actitime.com/login.do");
+	
+	WebElement USERTEXT = driver.findElement(By.id("username"));
+	USERTEXT.sendKeys("admin");
+	Thread.sleep(2000);
+	
+	//webElement Method3:-clear()
+	USERTEXT.clear();*/
+	
+	//webElement Method4:-submit()
+	/*driver.get("https://www.amazon.in");
+	WebElement searchBar = driver.findElement(By.cssSelector("#twotabsearchtextbox"));
+	searchBar.sendKeys("bluetooth");
+	//searchBar.click();
+	searchBar.submit();*/
+
+   /* driver.get("https://www.facebook.com");
+    //webElement Method5:-getLocation()
+    WebElement loc = driver.findElement(By.xpath("//a[text()='ಕನ್ನಡ']"));
+    Point location = loc.getLocation();
+	System.out.println(location.getX());
+	System.out.println(location.getY());
+	
+	//webElement Method6:-getSize()
+	WebElement loc1 = driver.findElement(By.xpath("//a[text()='ಕನ್ನಡ']"));
+	Dimension size = loc1.getSize();
+	//System.out.println(size);
+	System.out.println(size.getHeight());
+	System.out.println(size.getWidth());
+	
+	//webElement Method7:-getRect()
+	WebElement loc2 = driver.findElement(By.xpath("//a[text()='ಕನ್ನಡ']"));
+	Rectangle data = loc2.getRect();
+	System.out.println(data.getX());
+	System.out.println(data.getY());
+	System.out.println(data.getHeight());
+	System.out.println(data.getWidth());*/
+	
+   /*  driver.get("https://www.amazon.in");
+	//webElement Method8:-isDisplayed()
+     WebElement logo = driver.findElement(By.id("nav-logo-sprites"));
+     if(logo.isDisplayed())
+     {
+    	 System.out.println("Logo Displayed");
+     }
+     else
+     {
+    	 System.out.println("Logo not displayed");
+     }
+   //webElement Method9:-isEnabled()
+     
+	WebElement searchBar = driver.findElement(By.cssSelector("#twotabsearchtextbox"));
+	if(searchBar.isEnabled())
+	{
+		searchBar.sendKeys("puma");
+		searchBar.submit();
+	}
+	else
+	{
+		System.out.println("Not Enabled");
+	}*/
+
+//webElement Method10:-isSelected(
+   /* driver.get("https://www.facebook.com");
+	driver.findElement(By.xpath("//a[.='Create new account']")).click();
+	Thread.sleep(2000);
+	WebElement radioButton = driver.findElement(By.xpath("(//input[@type='radio'])[1]"));
+	radioButton.click();
+	if(radioButton.isSelected())
+	{
+		System.out.println("radioButton is Selected");
+	}
+	else
+	{
+		System.out.println("radioButton not Selected");
+	}*/
+
+    //webElement Method11:-getAttribute()
+   /* driver.get("https://www.amazon.in");
+    WebElement searchBar = driver.findElement(By.cssSelector("#twotabsearchtextbox"));
+	System.out.println(searchBar.getAttribute("class"));
+
+	//src is not present in HTML DOC  ---->Null
+	System.out.println(searchBar.getAttribute("src"));
+	
+   WebElement data = driver.findElement(By.xpath("//a[.=\"Today's Deals\"]"));
+   System.out.println(data.getAttribute("tabindex"));*/
+
+   //webElement Method12:-getTagName()
+   // driver.get("https://www.amazon.in");
+	//WebElement submitBar = driver.findElement(By.id("nav-search-submit-button"));
+	//System.out.println(submitBar.getTagName());
+	
+  //webElement Method13:-getAriaRole()
+	/*WebElement searchBar = driver.findElement(By.cssSelector("#twotabsearchtextbox"));
+	System.out.println(searchBar.getAriaRole());
+	
+	WebElement data = driver.findElement(By.xpath("//a[text()=\"Today's Deals\"]"));
+	System.out.println(data.getAriaRole());*/
+	
+    //DOM:-Document object model
+    //webElement Method14:-getDomAttribute()
+/*	WebElement searchBar = driver.findElement(By.cssSelector("#twotabsearchtextbox"));
+	System.out.println(searchBar.getDomAttribute("aria-label"));
+	
+	//webElement Method15:-getDomProperty()
+	WebElement txt = driver.findElement(By.xpath("//a[text()=\"Mobiles\"]"));
+	System.out.println(txt.getDomProperty("textContent"));
+	System.out.println(txt.getDomProperty("tagName"));*/
+	
+    //webElement Method16:-getAccessibleName()
+	/*driver.get("https://www.facebook.com");
+	WebElement fbLogo = driver.findElement(By.xpath("//img[@class='fb_logo _8ilh img']"));
+	System.out.println(fbLogo.getAccessibleName());*/
+	
+    //webElement Method17:-getText()
+	driver.get("https://www.amazon.in");
+	WebElement searchBar = driver.findElement(By.cssSelector("#twotabsearchtextbox"));
+	searchBar.sendKeys("iphone");
+	searchBar.submit();
+	String price = driver.findElement(By.xpath("(//span[text()='50,499'])[1]")).getText();
+	System.out.println(price);
+}
+
+}
+------------------------------------------------------------------------------------------------------------------------------------------------------------------

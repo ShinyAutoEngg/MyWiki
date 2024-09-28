@@ -1,0 +1,350 @@
+Xpath()
+  -------
+-->It is a locator(static method) present in a "By class",which is used to locate the webelement by using any
+   html tag or any attribute or any visible text.
+
+
+                        XPATH:  
+                       =======
+It is a path of an element in html tree structure.
+
+In x-path we have 2 types
+1.Absolute Xpath
+2.Relative xpath
+
+Absolute Xpath:(xpath by position)
+---------------
+
+*** To traverse from parent to immediate child we make use of /(forward slash)
+
+1<html>
+1<body>
+1<div>
+1<input type="text" value="A">
+2<input type="text" value="B">
+</div>
+2<div>
+1<input type="text" value="C">
+2<input type="text" value="D">
+</div>
+</body>
+</html>
+
+
+WebElements        X=Path
+------------       -------
+A                  html/body/div[1]/input[1]
+B                  html/body/div[1]/input[2]
+C                  html/body/div[2]/input[1]    
+D                  html/body/div[2]/input[2]
+AB                 html/body/div[1]/input
+CD                 html/body/div[2]/input
+AC                 html/body/div/input[1]
+BD                 html/body/div/input[2]
+AD                 html/body/div[1]/input[1]|html/body/div[2]/input[2]
+BC                 html/body/div[1]/input[2]|html/body/div[2]/input[1]
+ABCD               html/body/div/input
+ABC                html/body/div[1]/input|html/body/div[2]/input[1]
+BDC                html/body/div[1]/input[2]|html/body/div[2]/input
+
+
+Note: In order to write multiple xpath we use pipline operator(|)
+
+Writing the xpath expression from beginning of the html tree till element is called as Absolute x-path.
+
+Note:For n number of tags we can use n-1 '/' single forward slash
+
+
+
+b)Relative Xpath
+  ---------------
+-->// -->Double forward slash   (Traverse from parent to any child)
+-->/  -->Single forward slash   (Traverse from parent to immediate child)
+
+To follow this kind of approach also we required html tree structure which is time consuming and different.
+
+In order to overcome this approach,there are several cases of xpath which makes relative xpath more accurate and efficient.
+
+The basic cases of xpath are:-
+                           1) Xpath by attribute
+                           2) Xpath by visibleText
+                           3) Xpath contains Attribute
+                           4) Xpath contains VisibleText
+
+Syntax for above basic cases of xpath are--
+------------------------------------------
+
+1) Xpath by attribute
+   ------------------
+  //html tag[@Attributename='Attribute value']      @->Search given value only in attribute.
+
+2) Xpath by VisibleText
+   --------------------
+  //html tag[text()='Complete_visible_text']         text()->It is xpath function which search given value only                                                               in visible text.
+3) Xpath by contains Attribute
+   ---------------------------
+  //html tag[contains(@Attribute name,'Partial Attribute Value')]
+
+4) Xpath by contains VisibleText
+   -----------------------------
+  //html tag[contains(text(),'partial visible text')]
+
+
+Program:-
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.edge.EdgeDriver;
+import io.github.bonigarcia.wdm.WebDriverManager;
+
+public class XpathEx {
+
+	public static void main(String[] args) throws Throwable {
+		
+		//launching browser
+		WebDriverManager.edgedriver().setup();
+		WebDriver driver=new EdgeDriver();
+
+		     //launching application
+		driver.get("https://demo.actitime.com/login.do");
+		
+		//syntax1:-xpath by Attribute
+		//htmltag[@AttributeNAme="AttributeValue"]
+	//driver.findElement(By.xpath("//input[@placeholder='Username']")).sendKeys("admin");
+
+	//driver.findElement(By.xpath("//input[@name=\"pwd\"]")).sendKeys("manager");
+		
+		//syntax2:-xpath by text()
+		//htmltag[text()="visibleText"]
+	//driver.findElement(By.xpath("//div[text()=\"Login \"]")).click();
+	
+		//syntax3:-xpath by contains Attribute
+		//htmltag[conatins(@AttributeNAme,'AttributeVAlue')]
+	driver.findElement(By.xpath("//input[contains(@name,'us')]")).sendKeys("admin");
+	
+	driver.findElement(By.xpath("//input[@name=\"pwd\"]")).sendKeys("manager");
+	driver.findElement(By.xpath("//div[text()=\"Login \"]")).click();
+	
+	Thread.sleep(2000);
+	//syntax4:-xpath by contains Attribute
+			//htmltag[conatins(text(),'AttributeVAlue')]
+	driver.findElement(By.xpath("//a[contains(text(),'Vie')]")).click();
+	}
+}
+-----------------------------------------------------------------------------------------------------------------------------------------------
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.edge.EdgeDriver;
+
+import io.github.bonigarcia.wdm.WebDriverManager;
+
+public class FlipKArtUsingXpath {
+
+	public static void main(String[] args) throws Throwable {
+		WebDriverManager.edgedriver().setup();
+		WebDriver driver=new EdgeDriver();
+		
+		driver.get("https://www.flipkart.com");
+		
+		//syntax1:-  //htmltag[@AttributeName='AttributeValue']
+	//driver.findElement(By.xpath("//span[@class='_30XB9F']")).click();
+		
+		//syntax2:-  //htmltag[text()='AttributeValue']
+	//driver.findElement(By.xpath("//span[text()='✕']")).click();
+		driver.findElement(By.xpath("//*[.='✕']")).click();
+	
+		Thread.sleep(1000);
+		driver.findElement(By.xpath("//span[contains(text(),'Home')]")).click();
+	}
+}
+--------------------------------------------------------------------------------------------------------------------------------------------------
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.edge.EdgeDriver;
+
+import io.github.bonigarcia.wdm.WebDriverManager;
+
+public class AmazonUsingXpath {
+
+	public static void main(String[] args) {
+		
+		WebDriverManager.edgedriver().setup();
+		WebDriver driver=new EdgeDriver();
+		
+		driver.get("https://www.amazon.in");
+		
+		//syntax1:-xpath by Attribute
+				//htmltag[@AttributeNAme="AttributeValue"]
+		//driver.findElement(By.xpath("//a[@data-csa-c-content-id=\"nav_cs_gb\"]")).click();
+
+		//syntax2:-xpath by text()
+				//htmltag[text()="visibleText"]
+		driver.findElement(By.xpath("//a[text()=\"Today's Deals\"]")).click();
+	}
+
+}
+------------------------------------------------------------------------------------------------------------------------------------------------
+
+Xpath with multiple attributes:
+-------------------------------
+
+And
+a b  y
+0 0  0
+0 1  0
+1 0  0
+1 1  1
+
+OR
+
+a b  y
+0 0  0
+0 1  1
+1 0  1
+1 1  1
+
+In order to write multiple Attributes in a single x-path expression we use 'AND' / 'OR' operator
+
+Syntax:
+-------
+//tagName[@AttributeName='AttributeValue' and @AttributeName='AttributeValue']
+//htmltag[@AttributeName='AttributeValue' and tex()='AttributeValue']
+//tagName[@AttributeName='AttributeValue' or @AttributeName='AttributeValue']
+
+AND--> both the locator should be correct
+OR---> any one of the locator should be correct
+
+Ex://input[@type='text' or @id='email']
+Ex://input[@type='text' and @id='email']
+
+
+program:-
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.edge.EdgeDriver;
+import io.github.bonigarcia.wdm.WebDriverManager;
+
+public class XpathByMultipleAttribute {
+
+	public static void main(String[] args) {
+		
+		//launching browser
+				WebDriverManager.edgedriver().setup();
+				WebDriver driver=new EdgeDriver();
+
+				     //launching application
+				driver.get("https://demo.actitime.com/login.do");
+				driver.manage().window().maximize();
+				
+//syntax:- And //htmltag[@AttributeName='AttributeValue' and @AtributeNAme='AttributeVAlue']
+driver.findElement(By.xpath("//input[@name='username' and @id='username']")).sendKeys("admin");
+
+//syntax:- or //htmltag[@AttributeName='AttributeValue' or @AtributeNAme='AttributeVAlue']
+driver.findElement(By.xpath("//input[@name='pwd' or @placeholder='Passwor']")).sendKeys("manager");
+	
+//syntax:- or //htmltag[text()='AttributeValue' or @AtributeNAme='AttributeVAlue']
+	driver.findElement(By.xpath("//div[text()='Login ' or @id='loginButton']")).click();
+	}
+
+}
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+
+X-Path by Text/Text() Function
+------------------------------
+1. when there are no attributes we go for text() function
+2. when the locator is matching with multiple attributes we go for text() function
+
+Syntax:
+-------
+
+//htmltag[text()='textValue']
+      or
+//htmltag[.='textValue']
+
+
+Text() function with multiple attributes
+========================================
+
+Syntax:
+
+//htmltag[text()='TextValue' and @AttributeName='AttributeValue']
+
+driver.findElement(By.xpath("//a[text()='View Time-Track' and @class='item']")).click();
+
+
+Handling Partially dynamic Element.  (contains)
+===================================
+In order to handle partially dynamic element we go for Contains method
+
+Synatax:
+--------
+
+//htmltag[contains(text(),'textValue')]
+       or
+//htmltag[contains(.,'textValue')]
+
+Handling Completly dynamic elements:
+===================================
+
+In order to handle completly dynamic elements we go for xpath by Traversing or Independent Dependent xpath.
+                                                                 ----------   ----------------------
+/ --> Traversing from parent to child
+/..  ->Trversing from child to Immediate parent
+
+Synatx:     //htmltag[.='TextValue']/../htmltag[index]
+-------
+<html>
+<body>
+<table border="1">
+<tbody>
+<tr>
+<td>1</td>
+<td>Kanthara</td>
+<td>10cr</td>
+</tr>
+<tr>
+<td>2</td>
+<td>KGF2</td>
+<td>25cr</td>
+</tr>
+<tr>
+<td>3</td>
+<td>RRR</td>
+<td>20cr</td>
+</tr>
+</tbody>
+</table>
+</body>
+</html>
+
+
+Tree Structure:
+--------------
+html              1
+ body             1
+  table           1
+   tbody          1
+    tr            1
+     td slno      1
+     td mname     2
+     td coll      3
+
+***
+In order to handle completly dynamic elements we must fallow 3 steps
+step1: First locate the static element
+step2: From the static element move to immediate parent
+step3: From the parent element locate the dynamic element
+
+Write a xpath to locate the movie collection of kantara
+=//td[.='Kanthara']/../td[3]
+
+write a xpath to locate movie collection of RRR
+=//td[.='RRR']/../td[3]
+
+write a xpath to locate movie collection of KGF2
+=//td[.='KGF2']/../td[3]
+------------------------------------------------------------------------------------------------------------------------------------------------------------

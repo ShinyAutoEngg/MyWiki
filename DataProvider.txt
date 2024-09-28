@@ -1,0 +1,247 @@
+import java.io.FileInputStream;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.DataFormatter;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
+
+public class Excel_utility {
+/**
+ * THis method is used to fetch data from excelsheet
+ * @param sheetName
+ * @param rowNum
+ * @param cellNum
+ * @return
+ * @throws Throwable
+ */
+	public String getExcelData(String sheetName,int rowNum,int cellNum) throws Throwable
+	{
+		FileInputStream fis1=new FileInputStream(iPathConstant.EXCEL_PATH);
+		//FileInputStream fis1=new FileInputStream("src/test/resources/ExcelData10to12.xlsx");
+		//FileInputStream fis=new FileInputStream("C:\\Users\\Shobha\\Desktop\\ExcelData10to12.xlsx");
+		//Step2:-open workbook in read mode
+		Workbook book = WorkbookFactory.create(fis1);
+		
+		//step:-3 get the control to the sheet
+		Sheet sh = book.getSheet(sheetName);
+		
+		//step:-4 get the control on the row
+		Row row = sh.getRow(rowNum);
+	
+	   //step:-5 get the control on the cell
+	Cell cel = row.getCell(cellNum);
+	
+	  //step6:- fetch the data from the cell
+		String value = cel.getStringCellValue();
+		return value;
+		}
+	
+	/**
+	 * this method is used to fetch data from excelsheet using Formatter
+	 * @param SheetName
+	 * @param rowNum
+	 * @param callNum
+	 * @return
+	 * @throws Throwable
+	 */
+	public String getExcelDataUsingDataFormatter(String SheetName,int rowNum,int cellNum) throws Throwable
+	{
+		FileInputStream fis1=new FileInputStream("src/test/resources/ExcelData10to12.xlsx");
+		Workbook book = WorkbookFactory.create(fis1);
+		DataFormatter format = new DataFormatter();
+		String value = format.formatCellValue(book.getSheet(SheetName).getRow(rowNum).getCell(cellNum));
+		return value;
+		
+	}
+	public Object[][] readMultipleData(String SheetName) throws Throwable{
+		FileInputStream fis1=new FileInputStream("C:\\Users\\Shobha\\Downloads\\PraticeExcel.xlsx");
+        Workbook book=WorkbookFactory.create(fis1);
+
+        Sheet sheet = book.getSheet(SheetName);
+      int lastRow = sheet.getLastRowNum()+1;//num of rows
+      int lastCell = sheet.getRow(0).getLastCellNum();
+
+      Object[][] obj = new Object[lastRow][lastCell];
+		for(int i=0;i<lastRow;i++)
+		{
+			for(int j=0;j<lastCell;j++)
+			{
+				obj[i][j]=sheet.getRow(i).getCell(j).toString();
+			}
+		}
+		return obj;
+		}
+}
+------------------------------------------------------------------------------------------------------------------------------------------------------
+
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
+
+public class DataProviderEx1 {
+
+	@Test(dataProvider="dataProviderExecute")
+	public void bookTickets(String src,String dest)
+	{
+		System.out.println("book tickets from"+src+"to "+dest);
+	}
+	
+	@DataProvider
+	public Object[][] dataProviderExecute()
+	{
+		Object[][] obj = new Object[2][2];
+		obj[0][0]="bangalore";
+		obj[0][1]="goa";
+		
+		obj[1][0]="bangalore";
+		obj[1][1]="mysore";
+		return obj;
+		
+	}
+}
+---------------------------------------------------------------------------------------------------------------------------------------------------------
+import java.io.FileInputStream;
+
+import org.apache.poi.ss.usermodel.DataFormatter;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
+
+import Generic_utility.Excel_utility;
+import io.github.bonigarcia.wdm.WebDriverManager;
+
+public class DataProviderEx3 {
+	
+	@Test(dataProvider="getData")
+	public void bookTickets(String src,String dest)
+	{
+	
+		System.out.println("book tickets from"+src+"to "+dest);
+	}
+
+@DataProvider
+	public Object[][] getData() throws Throwable
+	{
+	Excel_utility elib=new Excel_utility();
+	Object[][] value = elib.readMultipleData("DataProvider");
+	
+		return value;
+		
+	
+}
+}
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+import java.util.Random;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.edge.EdgeDriver;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
+
+import Generic_utility.Excel_utility;
+import Generic_utility.WebDriver_Utility;
+import io.github.bonigarcia.wdm.WebDriverManager;
+
+public class DataProviderEx2 {
+@Test(dataProvider="getdata")
+	public void m1(String orgName,String phoneNum,String emailId) throws Throwable
+	{
+	WebDriverManager.chromedriver().setup();
+	WebDriver driver=new ChromeDriver();
+	driver.get("http://localhost:8888/");
+	driver.findElement(By.name("user_name")).sendKeys("admin");
+	driver.findElement(By.name("user_password")).sendKeys("admin");
+	driver.findElement(By.id("submitButton")).click();
+	driver.findElement(By.linkText("Organizations")).click();
+	driver.findElement(By.xpath("//img[@alt='Create Organization...']")).click();
+	driver.findElement(By.name("accountname")).sendKeys(orgName);
+	driver.findElement(By.name("phone")).sendKeys(phoneNum);
+	driver.findElement(By.id("email1")).sendKeys(emailId);
+	Thread.sleep(1000);
+	driver.findElement(By.xpath("//input[@title='Save [Alt+S]']")).click();
+	Thread.sleep(1000);
+	driver.findElement(By.xpath("//img[@src='themes/softed/images/user.PNG']")).click();
+	driver.findElement(By.xpath("//a[text()='Sign Out']")).click();
+	Thread.sleep(1000);
+	driver.quit();
+}
+@DataProvider
+public Object[][] getdata() throws Throwable
+{
+/*Random ran=new Random();
+	int ranNum = ran.nextInt(1000);
+	Object[][] obj = new Object[3][3];
+	obj[0][0]="AAA"+ranNum;
+	obj[0][1]="57654645254";
+	obj[0][2]="jhfg@gmail.com";
+	
+	obj[1][0]="BBB"+ranNum;
+	obj[1][1]="57654645254";
+	obj[1][2]="jhjhgfjhg@gmail.com";
+	
+	obj[2][0]="CCC"+ranNum;
+	obj[2][1]="55454645254";
+	obj[2][2]="jhfg@gmail.com";
+	return obj;*/
+	
+}
+}
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+import java.io.FileInputStream;
+import java.util.Random;
+
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
+
+import Generic_utility.Excel_utility;
+import io.github.bonigarcia.wdm.WebDriverManager;
+
+public class Dataprovider {
+
+	@Test(dataProvider="getdata")
+	public void m1(String orgName,String phoneNum,String emailId) throws Throwable
+	{
+	WebDriverManager.chromedriver().setup();
+	WebDriver driver=new ChromeDriver();
+	driver.get("http://localhost:8888/");
+	Random ran = new Random();
+	int rannum = ran.nextInt(1000);
+	
+	driver.findElement(By.name("user_name")).sendKeys("admin");
+	driver.findElement(By.name("user_password")).sendKeys("admin");
+	driver.findElement(By.id("submitButton")).click();
+	driver.findElement(By.linkText("Organizations")).click();
+	driver.findElement(By.xpath("//img[@alt='Create Organization...']")).click();
+	driver.findElement(By.name("accountname")).sendKeys(orgName+rannum);
+	driver.findElement(By.name("phone")).sendKeys(phoneNum);
+	driver.findElement(By.id("email1")).sendKeys(emailId);
+	Thread.sleep(1000);
+	driver.findElement(By.xpath("//input[@title='Save [Alt+S]']")).click();
+	Thread.sleep(1000);
+	driver.findElement(By.xpath("//img[@src='themes/softed/images/user.PNG']")).click();
+	driver.findElement(By.xpath("//a[text()='Sign Out']")).click();
+	Thread.sleep(1000);
+	driver.quit();
+}
+@DataProvider
+public Object[][] getdata() throws Throwable
+{
+	Excel_utility elib=new Excel_utility();
+	Object[][] Obj = elib.readMultipleData("Sheet1");
+	return Obj;
+}
+}
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+

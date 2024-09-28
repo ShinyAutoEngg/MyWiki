@@ -1,0 +1,506 @@
+Generic Classes Implementations:-
+-------------------------------------------------------------------------------------------------------------------------------------------------
+
+import java.time.Duration;
+import java.util.Iterator;
+import java.util.Set;
+
+import org.openqa.selenium.Alert;
+import org.openqa.selenium.WebDriver;
+
+public class Webdriver_Utility {
+
+	/**
+	 * This method is used to maximize the window
+	 * @param driver
+	 */
+	public void maximizingWindow(WebDriver driver)
+	{
+		driver.manage().window().maximize();
+	}
+	
+	/**
+	 *  This method is used to minimize the window
+	 * @param driver
+	 */
+	public void minimizeWindow(WebDriver driver)
+	{
+		driver.manage().window().minimize();
+	}
+	
+	/**
+	 * This method will wait elements to get loaded in GUI
+	 * @param driver
+	 */
+	public void implicity_wait(WebDriver driver)
+	{
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+	}
+	
+	/**
+	 * This method is used for Switching Windows
+	 * @param driver
+	 * @param partialVisibleText
+	 */
+	public void windowSwitching(WebDriver driver,String partialVisibleText)
+	{
+		Set<String> allWin = driver.getWindowHandles();
+		Iterator<String> win = allWin.iterator();
+
+		while(win.hasNext())
+		{
+			String winText = win.next();
+		driver.switchTo().window(winText);
+		String title = driver.getTitle();
+
+		if(title.contains(partialVisibleText))
+		{
+			break;
+		}
+
+		}
+	}
+public void alertAccept(WebDriver driver)
+{
+	Alert alt = driver.switchTo().alert();
+	alt.accept();
+}
+	
+public void alertDismiss(WebDriver driver)
+{
+	Alert alt = driver.switchTo().alert();
+	alt.dismiss();
+}
+}
+--------------------------------------------------------------------------------------------------------------------------------------------------
+import java.util.Iterator;
+import java.util.Random;
+import java.util.Set;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.edge.EdgeDriver;
+
+import Generic_Utilities.Excel_Utility;
+import Generic_Utilities.File_Utility;
+import Generic_Utilities.Java_Utility;
+import Generic_Utilities.Webdriver_Utility;
+import io.github.bonigarcia.wdm.WebDriverManager;
+
+public class CampWithProduct {
+
+	public static void main(String[] args) throws Throwable {
+		
+		WebDriverManager.edgedriver().setup();
+		WebDriver driver=new EdgeDriver();
+		
+		Java_Utility jlib=new Java_Utility();
+		File_Utility flib=new File_Utility();
+		
+		String URL = flib.getKeyAndValueData("url");
+		String USERNAME = flib.getKeyAndValueData("username");
+		String PASSWORD = flib.getKeyAndValueData("password");
+
+		driver.get(URL);
+		driver.findElement(By.name("user_name")).sendKeys(USERNAME);
+		driver.findElement(By.name("user_password")).sendKeys(PASSWORD);
+		driver.findElement(By.id("submitButton")).click();
+		
+		driver.findElement(By.linkText("Products")).click();
+		driver.findElement(By.xpath("//img[@title='Create Product...']")).click();
+	
+		//Random Approach To avoid Duplicates
+      int ranNum = jlib.getRandomNum();
+      
+      Excel_Utility elib=new Excel_Utility();
+     String PrdName = elib.getDataFormatterData("Product",0 ,0)+ranNum;
+	
+		driver.findElement(By.name("productname")).sendKeys(PrdName);
+		driver.findElement(By.xpath("//input[@title='Save [Alt+S]']")).click();
+		
+String prdName = driver.findElement(By.xpath("//span[@id='dtlview_Product Name']")).getText();
+	
+if(prdName.contains(PrdName))
+{
+	System.out.println("Product Created");
+}
+else
+{
+	System.out.println("Product not created");
+}
+
+driver.findElement(By.linkText("More")).click();
+driver.findElement(By.linkText("Campaigns")).click();
+driver.findElement(By.xpath("//img[@alt='Create Campaign...']")).click();
+driver.findElement(By.xpath("//img[@alt='Select']")).click();
+
+Webdriver_Utility wlib=new Webdriver_Utility();
+wlib.windowSwitching(driver, "Products&action");
+//Set<String> allWin = driver.getWindowHandles();
+//Iterator<String> win = allWin.iterator();
+//
+//while(win.hasNext())
+//{
+//	String winText = win.next();
+//driver.switchTo().window(winText);
+//String title = driver.getTitle();
+//
+//if(title.contains("Products&action"))
+//{
+//	break;
+//}
+//
+//}
+Thread.sleep(2000);
+driver.findElement(By.xpath("//input[@name='search_text']")).sendKeys(PrdName);
+driver.findElement(By.xpath("//input[@name='search']")).click();
+
+//Dynamic Xpath
+//driver.findElement(By.xpath("//a[text()='"+NAme+"']")).click();
+driver.findElement(By.xpath("//a[text()='"+PrdName+"']")).click();
+
+wlib.windowSwitching(driver, "Campaigns&action");
+//Set<String> allWin1 = driver.getWindowHandles();
+//Iterator<String> win1 = allWin1.iterator();
+//
+//while(win1.hasNext())
+//{
+//	String winText1 = win1.next();
+//driver.switchTo().window(winText1);
+//String title1 = driver.getTitle();
+//
+//if(title1.contains("Campaigns&action"))
+//{
+//	break;
+//}
+//
+//}
+
+ String campName = elib.getDataFormatterData("Campaigns", 0, 0)+ranNum;
+driver.findElement(By.name("campaignname")).sendKeys(campName);
+	
+driver.findElement(By.xpath("//img[@src='themes/softed/images/user.PNG']")).click();
+driver.findElement(By.linkText("Sign Out")).click();
+	}
+
+}
+------------------------------------------------------------------------------------------------------------------------------------------------
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.edge.EdgeDriver;
+
+import Generic_Utilities.Excel_Utility;
+import Generic_Utilities.File_Utility;
+import Generic_Utilities.Java_Utility;
+import Generic_Utilities.Webdriver_Utility;
+import io.github.bonigarcia.wdm.WebDriverManager;
+
+public class CreateCampaigns {
+
+	public static void main(String[] args) throws Throwable {
+
+		WebDriverManager.edgedriver().setup();
+		WebDriver driver=new EdgeDriver();
+		
+		Webdriver_Utility wlib=new Webdriver_Utility();
+		Excel_Utility elib=new Excel_Utility();
+		Java_Utility jlib=new Java_Utility();
+		File_Utility flib=new File_Utility();
+		
+		String URL = flib.getKeyAndValueData("url");
+		String USERNAME = flib.getKeyAndValueData("username");
+		String PASSWORD = flib.getKeyAndValueData("password");
+
+		driver.get(URL);
+		driver.findElement(By.name("user_name")).sendKeys(USERNAME);
+		driver.findElement(By.name("user_password")).sendKeys(PASSWORD);
+		driver.findElement(By.id("submitButton")).click();
+		
+		driver.findElement(By.linkText("More")).click();
+		driver.findElement(By.linkText("Campaigns")).click();
+		driver.findElement(By.xpath("//img[@alt='Create Campaign...']")).click();
+		
+		//Random Approach To avoid Duplicates
+		int ranNum = jlib.getRandomNum();
+		
+
+		 String campName = elib.getDataFormatterData("Campaigns", 0, 0)+ranNum;
+		driver.findElement(By.name("campaignname")).sendKeys(campName);
+		driver.findElement(By.xpath("//input[@title='Save [Alt+S]']")).click();
+		
+		String campaignName = driver.findElement(By.xpath("//span[@id='dtlview_Campaign Name']")).getText();
+		
+		if(campaignName.contains(campName))
+		{
+			System.out.println("Campaign Created");
+		}
+		else
+		{
+			System.out.println("Campaign not created");
+		}
+	   driver.findElement(By.xpath("//img[@src='themes/softed/images/user.PNG']")).click();
+		driver.findElement(By.linkText("Sign Out")).click();
+	}
+
+}
+---------------------------------------------------------------------------------------------------------------------------------------------------
+
+import java.io.FileInputStream;
+import java.util.Formatter;
+import java.util.Properties;
+import java.util.Random;
+
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.DataFormatter;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.edge.EdgeDriver;
+
+import Generic_Utilities.Excel_Utility;
+import Generic_Utilities.File_Utility;
+import Generic_Utilities.Java_Utility;
+import Generic_Utilities.Webdriver_Utility;
+import io.github.bonigarcia.wdm.WebDriverManager;
+
+public class CreateOrganization {
+
+	public static void main(String[] args) throws Throwable {
+		
+		WebDriverManager.edgedriver().setup();
+		WebDriver driver=new EdgeDriver();
+		
+		File_Utility flib = new File_Utility();
+		Java_Utility jlib=new Java_Utility();
+		Excel_Utility elib = new Excel_Utility();
+		Webdriver_Utility wlib = new Webdriver_Utility();
+	
+		wlib.maximizingWindow(driver);
+	    wlib.implicity_wait(driver);
+	
+		/*FileInputStream fis = new FileInputStream("C:\\Users\\User\\Documents\\AdvSeleniumCommonData.properties.txt");
+		Properties pro = new Properties();
+		pro.load(fis);
+		String URL = pro.getProperty("url");
+        String USERNAME = pro.getProperty("username");
+        String PASSWORD = pro.getProperty("password");*/
+		
+		//calling from File_Utility class
+		
+		String URL = flib.getKeyAndValueData("url");
+		String USERNAME = flib.getKeyAndValueData("username");
+		String PASSWORD = flib.getKeyAndValueData("password");
+
+        driver.get(URL);
+		driver.findElement(By.name("user_name")).sendKeys(USERNAME);
+		driver.findElement(By.name("user_password")).sendKeys(PASSWORD);
+		driver.findElement(By.id("submitButton")).click();
+		
+		driver.findElement(By.linkText("Organizations")).click();
+driver.findElement(By.xpath("//img[@title='Create Organization...']")).click();
+
+/*Random ran = new Random();
+int ranNum = ran.nextInt(1000);*/
+
+//calling from Java_Utility class
+//Random Approach To avoid Duplicates
+
+int ranNum = jlib.getRandomNum();
+
+//String OrgName = "TestYantra"+ranNum;
+//fetching data from Excel
+/*FileInputStream fes = new FileInputStream("./src/test/resources/TestData.xlsx");
+Workbook book = WorkbookFactory.create(fes);
+Sheet sheet = book.getSheet("Organization");
+Row row = sheet.getRow(0);
+Cell cel = row.getCell(0);
+String OrgName = cel.getStringCellValue()+ranNum;*/
+
+//calling from Excel_Utility class
+
+//String OrgName = elib.getExcelData("Organization", 0, 0)+ranNum;
+String OrgName = elib.getDataFormatterData("Organization", 0, 0)+ranNum;
+
+driver.findElement(By.name("accountname")).sendKeys(OrgName);
+
+driver.findElement(By.xpath("//input[@title='Save [Alt+S]']")).click();
+Thread.sleep(1000);
+String PrdName = driver.findElement(By.xpath("//span[@id='dtlview_Organization Name']")).getText();
+if(PrdName.contains(OrgName))
+{
+	System.out.println("Organization Created");
+}
+else
+{
+	System.out.println("Organization not created");
+}
+
+driver.findElement(By.xpath("//img[@src='themes/softed/images/user.PNG']")).click();
+driver.findElement(By.linkText("Sign Out")).click();
+	}
+
+}
+---------------------------------------------------------------------------------------------------------------------------------------------------
+
+import java.util.List;
+import java.util.Random;
+
+import org.openqa.selenium.Alert;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.edge.EdgeDriver;
+
+import Generic_Utilities.Excel_Utility;
+import Generic_Utilities.File_Utility;
+import Generic_Utilities.Java_Utility;
+import Generic_Utilities.Webdriver_Utility;
+import io.github.bonigarcia.wdm.WebDriverManager;
+
+public class CreateProduct {
+
+	public static void main(String[] args) throws Throwable {
+		
+		WebDriverManager.edgedriver().setup();
+		WebDriver driver=new EdgeDriver();
+		
+		Webdriver_Utility wlib=new Webdriver_Utility();
+		Excel_Utility elib=new Excel_Utility();
+		Java_Utility jlib=new Java_Utility();
+		File_Utility flib=new File_Utility();
+		
+		String URL = flib.getKeyAndValueData("url");
+		String USERNAME = flib.getKeyAndValueData("username");
+		String PASSWORD = flib.getKeyAndValueData("password");
+		
+		driver.get(URL);
+		driver.findElement(By.name("user_name")).sendKeys(USERNAME);
+		driver.findElement(By.name("user_password")).sendKeys(PASSWORD);
+		driver.findElement(By.id("submitButton")).click();
+		
+		driver.findElement(By.linkText("Products")).click();
+		driver.findElement(By.xpath("//img[@title='Create Product...']")).click();
+	
+		//Random Approach To avoid Duplicates
+	int ranNum = jlib.getRandomNum();
+		
+	String PrdName = elib.getExcelData("Product", 0, 0)+ranNum;
+		driver.findElement(By.name("productname")).sendKeys(PrdName);
+		System.out.println(PrdName);
+		driver.findElement(By.xpath("//input[@title='Save [Alt+S]']")).click();
+		
+String prdName = driver.findElement(By.xpath("//span[@id='dtlview_Product Name']")).getText();
+	
+if(prdName.contains(PrdName))
+{
+	System.out.println("Product Created");
+}
+else
+{
+	System.out.println("Product not created");
+}
+
+driver.findElement(By.xpath("//img[@src='themes/softed/images/user.PNG']")).click();
+driver.findElement(By.linkText("Sign Out")).click();
+	}
+
+}
+----------------------------------------------------------------------------------------------------------------------------------------------------
+mport java.util.List;
+import java.util.Random;
+import org.openqa.selenium.Alert;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.edge.EdgeDriver;
+
+import Generic_Utilities.Excel_Utility;
+import Generic_Utilities.File_Utility;
+import Generic_Utilities.Java_Utility;
+import Generic_Utilities.Webdriver_Utility;
+import io.github.bonigarcia.wdm.WebDriverManager;
+
+public class DeleteProduct {
+
+	public static void main(String[] args) throws Throwable {
+	
+		WebDriverManager.edgedriver().setup();
+		WebDriver driver=new EdgeDriver();
+		
+
+		Webdriver_Utility wlib=new Webdriver_Utility();
+		Excel_Utility elib=new Excel_Utility();
+		Java_Utility jlib=new Java_Utility();
+		File_Utility flib=new File_Utility();
+		
+		String URL = flib.getKeyAndValueData("url");
+		String USERNAME = flib.getKeyAndValueData("username");
+		String PASSWORD = flib.getKeyAndValueData("password");
+		
+		driver.get(URL);
+		driver.findElement(By.name("user_name")).sendKeys(USERNAME);
+		driver.findElement(By.name("user_password")).sendKeys(PASSWORD);
+		driver.findElement(By.id("submitButton")).click();
+		driver.findElement(By.linkText("Products")).click();
+		
+		driver.findElement(By.xpath("//img[@title='Create Product...']")).click();
+	
+
+		
+		int ranNum = jlib.getRandomNum();
+		
+		String PrdName = elib.getExcelData("Product", 0, 0)+ranNum;
+		System.out.println(PrdName);
+		driver.findElement(By.xpath("//input[@title='Save [Alt+S]']")).click();
+		
+		String prdName = driver.findElement(By.xpath("//span[@id='dtlview_Product Name']")).getText();
+		
+		if(prdName.contains(PrdName))
+		{
+			System.out.println("Product Created");
+		}
+		else
+		{
+			System.out.println("Product not created");
+		}
+		
+
+driver.findElement(By.xpath("(//a[text()='Products'])[1]")).click();
+
+driver.findElement(By.xpath("//a[text()='"+PrdName+"']/../preceding-sibling::td/input")).click();
+
+driver.findElement(By.xpath("//input[@value='Delete']")).click();
+wlib.alertAccept(driver);
+//Alert alt = driver.switchTo().alert();
+//alt.accept();
+
+//validation
+List<WebElement> prdList = driver.findElements(By.xpath("(//table[@class='lvt small']/tbody/tr/td[3])[position()>1]"));
+
+boolean flag=false;
+
+for (WebElement prd : prdList)
+{
+	String actData = prd.getText();//phone456
+	if(actData.contains(PrdName))//phone360
+	{
+		flag=true;
+		break;
+	}
+}
+if(flag)
+{
+	System.out.println("product deleted");
+}
+else
+{
+	System.out.println("Product not deleted");
+}
+driver.findElement(By.xpath("//img[@src='themes/softed/images/user.PNG']")).click();
+driver.findElement(By.linkText("Sign Out")).click();
+}
+
+}
+-------------------------------------------------------------------------------------------------------------------------------------------------

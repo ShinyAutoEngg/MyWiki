@@ -1,0 +1,19 @@
+WebDriver driver=new ChromeDriver();
+		driver.manage().window().maximize();
+		driver.get("http://rmgtestingserver:8888/index.php?action=Login&module=Users");
+		driver.findElement(By.name("user_name")).sendKeys("admin");
+		driver.findElement(By.name("user_password")).sendKeys("admin");
+		driver.findElement(By.id("submitButton")).click();
+		driver.findElement(By.xpath("//a[.='Organizations']")).click();
+	//	driver.findElements(By.xpath("(//table[@class='lvt small']/tbody/tr/td[3])[position()>1]"));
+		for(;;)
+		{
+			try
+			{
+			    driver.findElement(By.xpath("//a[.='TYSS775']")).click();
+				break;
+			}
+			catch (Exception e) {
+				driver.findElement(By.xpath("//img[@src='themes/images/next.gif']")).click();
+			}
+		}

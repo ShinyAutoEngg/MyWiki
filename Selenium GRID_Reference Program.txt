@@ -1,0 +1,98 @@
+Selenium Grid
+Selenium grid is a collection of libraries from Selenium RC + Selenium Webdriver + Selenium Grid Server
+ 
+Selenium is name of the community.[ https://www.selenium.dev/]
+Selenium meaning it’s a chemical name[name given by Jason Huggins to kill Mercury[vendor of QTP tool]
+Selenium introduced in 2004
+Selenium RC[selenium-1]: its first tool in selenium community, Selenium RC its collection of Java Script libraries,
+It was not a popular tool because of “same origin policy restriction”[java script available in one domain can’t execuite HTML page come from another domain]
+Selenium IDE: UI based record/playback tool, developed by shinya in 2006  it’s a plugin.
+WebDriver[selenium-2]: developed by Jason Huggins+simon stewart got introduced by google in 2008 [it’s a collection of java libraries].
+Selenium Grid: It’s a open source available in Selenium community and it acts like a server for remote execution and Compatability testing.
+Selenium grid is used to perform
+•	Remote Execution
+•	Cross Browser testing
+•	Cross Platform Testing(os)
+
+REMOTE EXECUTION: executing the test script in any remote devices like cloud machines, other computers in the same network, mobile devices like android or IOS with the help of selenium grid is called as Remote Execution.
+In order to perform Remote Execution we make use of:
+1.	Remote WebDriver:- It’s a subclass of webdriver which implements webdriver interface, its helps to achieve remote execution using selenium grid. It is present in org.openqa.selenium.remote.RemoteWebDriver
+
+2.	DesiredCapabilities:- It’s a class used to set or change the capabilities of webdriver. In remote execution we have to set the capabilities for browser name, browser version and platform where the test script has to be executed. It is present in org.openqa.selenium.remote.DesiredCapabilities
+
+We can set the capabilities to run the test Scripts in Remote Device Like VM-Machine[AWS] ,Platform etc..
+
+3.	URL : It’s a class in java which helps to store the remote address for remote execution, present in java.net.URL 
+ 
+How to Run Selenium grid?java
+1.	Download Selenium stand-alone-server-3.141.59.jar from the below link https://www.selenium.dev/downloads
+2.	Go to command prompt and execute the below command
+Java –jar selenium-stand-alone-server.jar
+   
+Default Port number of Selenium grid is 4444 and can be changed if required.
+@Test
+public void gridPractice() throws MalformedURLException
+{
+
+	URL url = new URL("http://localhost:4444");
+	DesiredCapabilities cap = new DesiredCapabilities();
+	cap.setBrowserName("chrome");
+	cap.setPlatform(Platform.WINDOWS);
+	RemoteWebDriver driver = new RemoteWebDriver(url, cap);
+	driver.get("http://gmail.com");
+	
+}
+java -Dwebdriver.chrome.driver=C:\Users\Shobha\git\SDET35-2\com.crm.SDET35copy2\src\main\resources\chromedriver.exe -jar C:\Users\Shobha\Downloads\selenium-server-standalone-3.141.59.jar -port 4444
+HUB and NODE:
+In selenium grid, concept of hub and node helps to configure more than one node for a hub. 
+HUB acts as the master which will receive the command from selenium and bypass that to nodes. Default port number is 4444, if its busy, port number can be changed like below
+ 
+ 
+NODE acts like slave which will receive the command from master/Hub and act execute the request. Maximum 5 nodes can be connected to 1 hub.
+ 
+ 
+Node registration shown in Hub:
+ 
+This configuration helps in parallel execution and cross browser parallel execution where the hub is configured in local system and nodes for various capabilities is configured in remote machines and the execution happens in nodes via hub.
+
+
+public class RemoteExcecution {
+	
+RemoteWebDriver driver;
+@Parameters("Browser")
+@BeforeClass
+public void configBeforeClass(String BROWSER) throws MalformedURLException {
+		 URL url = new URL("http://192.168.1.100:4444/wd/hub");
+		  DesiredCapabilities cap= new DesiredCapabilities();
+		
+		if(BROWSER.equals("chrome")) {
+			  cap.setPlatform(Platform.WINDOWS);
+			  cap.setBrowserName("chrome");
+		}else if(BROWSER.equals("firefox")){
+			  cap.setPlatform(Platform.WINDOWS);
+			  cap.setBrowserName("firefox");
+		}
+		driver = new RemoteWebDriver(url, cap);
+	}
+	
+@Test 
+public void remotteExcecution() throws MalformedURLException
+{
+		  driver.get("http://gmail.com");
+}
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+<suite thread-count="2" parallel="classes" name="Suite">
+  <test name="chromeBrowser">
+  <parameter name="BROWSER" value="chrome"/>
+    <classes>
+      <class name="ptc.Sample1Test"/>
+    </classes>
+  </test> <!-- Test -->
+  <test name="firefoxBrowser">
+  <parameter name="BROWSER" value="firefox"/>
+    <classes>
+      <class name="ptc.Sample2Test"/>
+    </classes>
+  </test> <!-- Test -->
+</suite> <!-- Suite -->
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------

@@ -1,0 +1,213 @@
+                                              Generic Libraries / Utility
+
+What is Generic components in Automation Framework?
+it’s one of the automation framework components which is common for all the application
+its collection of generic class contains reusable methods / libraries 
+      The methods which can be used to any application is called Generic/common methods
+What is the advantages of Generic components?
+	Reusability of code
+	Code Optimization 
+	Test script development is faster
+	Test Code readability
+	Generic libraries are common to all automation projects
+	Avoid duplicate Code
+	no need to remember the syntax every time , just create once & use multiple times 
+
+
+1.	Java Utility Libraries 
+ 
+  Java Utility is one class in generic component, which contain java specific methods which can be used across the test Scripts / Application 
+ its contains several generic reusable methods like
+	getRandomNum() : it’s used to  generate random number for every invocation
+	getSystemDate() : it’s used to generate system date and time
+
+import java.util.Random;
+
+public class Java_Utility
+{
+	/**
+	 * This method is used to avoid Duplicates
+	 * 
+	 * @author Shobha
+	 */
+
+	public  int getRandomNum()
+	{
+		Random ran = new Random();
+		int ranNum = ran.nextInt(1000);
+		return ranNum;
+	}
+}
+--------------------------------------------------------------------------------------------------------------------------
+
+3.	Excel Utility libraries 
+
+ 
+	As per the rule of automation, data should not be hardcoded with in the test scripts, so that to get the data from external file like Excel & .propertes file 
+We go for ExcelUtility & FileUtlity
+	Excel Utility class is developed using apache Poi libraries, which is used to read the data from Excel 
+	FileUtility is used to get the data from .properties file 
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.DataFormatter;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
+
+public class Excel_Utility {
+/**
+	 * this method is used to fetch data from excel sheet
+	 * @param sheetName
+	 * @param rowNum
+	 * @param cellNum
+	 * @return
+	 * @throws Throwable
+	 * @author Shobha
+	 */
+	public  String getExcelData(String sheetName,int rowNum,int cellNum) throws Throwable
+	{
+		FileInputStream fes = new FileInputStream("./src/test/resources/TestData.xlsx");
+		Workbook book = WorkbookFactory.create(fes);
+		Sheet sheet = book.getSheet(sheetName);
+		Row row = sheet.getRow(rowNum);
+		Cell cel = row.getCell(cellNum);
+		String ExcelData = cel.getStringCellValue();
+		return ExcelData;
+	}
+	
+	public  String getDataFormatterData(String sheetName,int rowNum,int cellNum ) throws Throwable
+	{
+		FileInputStream fes = new FileInputStream("./src/test/resources/TestData.xlsx");
+		Workbook book = WorkbookFactory.create(fes);
+		Sheet sheet = book.getSheet(sheetName);
+		 Row row = sheet.getRow(rowNum);
+		 Cell cell = row.getCell(cellNum);
+		 
+		DataFormatter format = new DataFormatter();
+		String ExcelData = format.formatCellValue(cell);
+		 return ExcelData;
+		 
+		 
+	}
+}
+-------------------------------------------------------------------------------------------------------------------------------------------------
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.util.Properties;
+
+public class File_Utility {
+
+	/**
+	 * This method is used to fetch common data in application
+	 * @param key
+	 * @return
+	 * @throws Throwable
+	 */
+	public   String getKeyAndValueData(String key) throws Throwable
+	{
+		FileInputStream fis = new FileInputStream("C:\\Users\\User\\Documents\\AdvSeleniumCommonData.properties.txt");
+		Properties pro = new Properties();
+		pro.load(fis);
+		String value = pro.getProperty(key);
+	    return value;
+	}
+
+}
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Implementation:-
+
+import java.io.FileInputStream;
+import java.util.Formatter;
+import java.util.Properties;
+import java.util.Random;
+
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.DataFormatter;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.edge.EdgeDriver;
+
+import Generic_Utilities.Excel_Utility;
+import Generic_Utilities.File_Utility;
+import Generic_Utilities.Java_Utility;
+import io.github.bonigarcia.wdm.WebDriverManager;
+
+public class CreateOrganization {
+
+	public static void main(String[] args) throws Throwable {
+		
+		WebDriverManager.edgedriver().setup();
+		WebDriver driver=new EdgeDriver();
+		
+		/*FileInputStream fis = new FileInputStream("C:\\Users\\User\\Documents\\AdvSeleniumCommonData.properties.txt");
+		Properties pro = new Properties();
+		pro.load(fis);
+		String URL = pro.getProperty("url");
+        String USERNAME = pro.getProperty("username");
+        String PASSWORD = pro.getProperty("password");*/
+		
+		//calling from File_Utility class
+		File_Utility flib = new File_Utility();
+		String URL = flib.getKeyAndValueData("url");
+		String USERNAME = flib.getKeyAndValueData("username");
+		String PASSWORD = flib.getKeyAndValueData("password");
+
+        driver.get(URL);
+		driver.findElement(By.name("user_name")).sendKeys(USERNAME);
+		driver.findElement(By.name("user_password")).sendKeys(PASSWORD);
+		driver.findElement(By.id("submitButton")).click();
+		
+		driver.findElement(By.linkText("Organizations")).click();
+driver.findElement(By.xpath("//img[@title='Create Organization...']")).click();
+
+/*Random ran = new Random();
+int ranNum = ran.nextInt(1000);*/
+
+//calling from Java_Utility class
+//Random Approach To avoid Duplicates
+Java_Utility jlib=new Java_Utility();
+int ranNum = jlib.getRandomNum();
+
+//String OrgName = "TestYantra"+ranNum;
+//fetching data from Excel
+/*FileInputStream fes = new FileInputStream("./src/test/resources/TestData.xlsx");
+Workbook book = WorkbookFactory.create(fes);
+Sheet sheet = book.getSheet("Organization");
+Row row = sheet.getRow(0);
+Cell cel = row.getCell(0);
+String OrgName = cel.getStringCellValue()+ranNum;*/
+
+//calling from Excel_Utility class
+Excel_Utility elib = new Excel_Utility();
+//String OrgName = elib.getExcelData("Organization", 0, 0)+ranNum;
+String OrgName = elib.getDataFormatterData("Organization", 0, 0)+ranNum;
+
+driver.findElement(By.name("accountname")).sendKeys(OrgName);
+
+driver.findElement(By.xpath("//input[@title='Save [Alt+S]']")).click();
+Thread.sleep(1000);
+String PrdName = driver.findElement(By.xpath("//span[@id='dtlview_Organization Name']")).getText();
+if(PrdName.contains(OrgName))
+{
+	System.out.println("Organization Created");
+}
+else
+{
+	System.out.println("Organization not created");
+}
+
+driver.findElement(By.xpath("//img[@src='themes/softed/images/user.PNG']")).click();
+driver.findElement(By.linkText("Sign Out")).click();
+	}
+
+}
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------

@@ -1,0 +1,351 @@
+MAVEN
+-> Its also called as Build management Tool, Build testing Tool, Build Dependency Tool,
+-> Maven is Tool used which has become popular for the build management instead ANT and GRADLE
+
+=> Why Maven used in Automation Testing?
+   - In Automation Maven is used for Testing the Application with the current/recent Framework
+     by executing the test scripts
+   - When Multiple automation testers are working with same framework, there might be chances
+     that the changes made by one Automation engg might affect the entire framework, in order 
+     to over come this issue we run the Maven life cycle for every build
+   - mvn clean, mvn validate, mvn compile, mvn test are the maven command used
+
+To create maven Project:
+Group id: Organization/Community Name
+Artifact Id: Project Name
+
+Inside Maven Project: Framework folder structure
+src/main/java
+ -> GenericUtilities
+ -> ObjectRepository
+src/main/resources
+ -> ChromeDriver.exe
+ -> FirefoxDriver.exe 
+ -> IEDriver.exe
+src/test/java
+ -> autodesk.OrganizationsTests
+ -> autodesk.ContactsTests
+src/test/resources
+ -> commonData.properties
+ -> TestData.xlsx
+pom.xml
+ -> Dependencies
+ -> plugins
+
+
+=> Advantages of MAVEN
+a.  Check the integration & compilation issue between the framework component whenever 
+    multiple engineer working with same framework, their might be possibilities one engineer 
+    modification, addition & deletion Might affect the entire build 
+b.  handle dependencies jars
+c.  Create framework configuration quick setup for new engineers (because all the required 
+    dependencies jar. Versions declared in POM.xml, you just to get the framework from the 
+    GIT & save the POM file 
+d.  provide framework folder structure
+--------------------------------------------------------------------------------------------------------------------------
+GITHUB
+=> Definition: It’s a distributed cloud decentralized repository where we can maintain our 
+               sourceCode / Automation Framwork / CRS doc /build of the application in one place
+
+=> Softwares involved in Github
+There are 2 Software in GitREpository
+1. Git HUB:- Cloud based repository(software), which is used maintain the source code 
+             in one place, in order to use it just create an account with 
+             https://github.com
+2. Git [Git client]:- it’s a software should installed in client machine , which is 
+                      used to communicate to  GITHUB
+=> Advantages of GitHub Cloud
+1. Since its cloud based repository , no need have maintenance team  to maintain the  
+   Software / HardWare
+2. Cloud means pay rent for what you use 
+3. Cloud software always access via internet
+4. Cloud System / sever physically not present within the Organization, but present 
+   virtually 
+EG : EGit:- Eclipse Git, Installed with Eclipse, we can execute git 
+                                  commands through eclipse.
+                           GitDeskTop/GitBash:- Should be installed externally to execute git 
+                                                commands through cmd line
+-------------------------------------------------------------------------------------------------------------------------
+JENKINS
+-> Jenkins is a CI/CD Tool used by Developers, DevOps and Automation Testers.
+-> CI -> Continous Integration
+   CD -> Continous Development
+      -> Continous Deployment
+      -> Continous Delivery
+
+=> Basically Jenkins automates 
+   -> Process of build creation - Continous development
+   -> Process of installing the build into testing environment - Continous deployment
+   -> Process of checking the integration issues between old feature and new features
+      - continous integration 
+   -> Process of delivering the tested the build to the production environment
+      - Continous delivery
+
+=> Why Jenkins is required in Automation?
+
+-> Continious Intergration : Continous execution of the selenium test scripts in testing 
+                             environment to check the integration issues. 
+
+=> scheduling Job in Jenkins:
+   Scheduling decides when the job execution should be triggered or started.
+   There are 3 types of Scheduling in Jenkins:
+   -> On Demand
+   -> On schedule
+   -> Poll SCM
+
+-----------------------------------------------------------------------------------------------------------------------------
+
+package New;
+
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+
+import io.github.bonigarcia.wdm.WebDriverManager;
+
+public class BrokenLinks {
+
+	public static void main(String[] args) 
+	{
+	WebDriver driver = WebDriverManager.chromedriver().create();	
+	driver.get("http://localhost:8888");
+	List<WebElement> linkList = driver.findElements(By.xpath("//a"));
+	List<String> brokenLink = new ArrayList<String>();
+	for(int i=0;i<linkList.size();i++)
+	{
+		String link = linkList.get(i).getAttribute("href");
+		URL url;
+		int statusCode=0;
+		try {
+			url=new URL(link);
+			URLConnection urlConnect = url.openConnection();
+			HttpURLConnection HttpURLConnection = (HttpURLConnection)urlConnect;
+			statusCode=HttpURLConnection.getResponseCode();
+			if(statusCode>=400)
+			{
+				brokenLink.add(link+"--->"+statusCode);
+			}
+		} catch (Exception e) {
+		brokenLink.add(link);
+		continue;	
+		}
+	}
+	System.out.println(brokenLink);
+	}
+}
+
+
+
+
+===============================================================
+
+Shadow DOM is a type of document object model where elements render in a separate tree from the main document. This means that they are not visible to Selenium unless you know how to access them. The second reason is that the element may be dynamically generated, which means it is not present in the HTML source code.
+
+
+package New;
+
+import java.time.Duration;
+
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+
+public class ShadowRootDemo {
+	public static void main(String[] args) {
+		ChromeOptions options = new ChromeOptions();
+		options.addArguments("remote-allow-origins=*");
+		ChromeDriver driver = new ChromeDriver(options);
+		driver.manage().window().maximize();
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+		driver.get("chrome://downloads/");
+		JavascriptExecutor js = (JavascriptExecutor)driver;
+		WebElement search = (WebElement)js.executeScript("return document.querySelector('downloads-manager').shadowRoot.querySelector('downloads-toolbar').shadowRoot.querySelector('cr-toolbar').shadowRoot.querySelector('#search').shadowRoot.querySelector('input')");
+		search.sendKeys("ShadowRootDemo.java");
+		
+	}
+}
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+POM class for LoginPage
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindAll;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.FindBys;
+import org.openqa.selenium.support.PageFactory;
+
+public class LoginPage {
+//@FindBys({@FindBy(id="username"),@FindBy(xpath="//input[@id='username']")})
+	
+	
+	@FindBy(id = "username") 
+	private WebElement userTextField;
+	
+	@FindBys({@FindBy(name="pwd"),@FindBy(xpath = "//input[@class='textField pwdfield']")})
+	private WebElement passWordTextField;
+	
+	@FindAll({@FindBy(id = "loginButton"),@FindBy(xpath = "//div[.='Login ']")})
+	private WebElement loginButton;
+	
+	
+	public LoginPage(WebDriver driver)
+	{
+		PageFactory.initElements(driver,this);
+	}
+	
+	public void loginToApp(String username,String password)
+	{
+		userTextField.sendKeys(username);
+		passWordTextField.sendKeys(password);
+		loginButton.click();
+	}
+
+	public WebElement getUserTextField() {
+		return userTextField;
+	}
+
+	public WebElement getPassWordTextField() {
+		return passWordTextField;
+	}
+
+	public WebElement getLoginButton() {
+		return loginButton;
+	}
+}
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+Implementing the POM class
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+
+import acti1Reo.LoginPage;
+
+public class Test1 {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+   WebDriver driver=new ChromeDriver();
+driver.get("https://demo.actitime.com/login.do");
+
+   LoginPage login = new LoginPage(driver);
+	//login.loginToApp("admin", "manager");	
+   
+   login.getUserTextField().sendKeys("admin");
+   login.getPassWordTextField().sendKeys("manager");
+   login.getLoginButton().click();
+	}
+
+}
+
+--------------------------------------------------------------------------------------------------------------
+
+Sikuli
+
+
+import java.awt.Robot;
+import java.awt.event.KeyEvent;
+import org.sikuli.script.Pattern;
+import org.sikuli.script.Screen;
+import org.testng.annotations.Test;
+
+public class SikuliEx {
+
+	@Test
+	public void m1() throws Throwable {
+	
+		Screen sc = new Screen();
+ Pattern min = new Pattern("C:\\Users\\Shobha\\eclipse-workspace\\ActiTime7to9\\mimBar.png");
+ sc.click(min);
+ 
+ Pattern search = new Pattern("C:\\Users\\Shobha\\eclipse-workspace\\ActiTime7to9\\searchbar1.png");
+	sc.click(search);
+	sc.type(search,"excel");
+	Robot rob = new Robot();
+	rob.keyPress(KeyEvent.VK_ENTER);
+	rob.keyRelease(KeyEvent.VK_ENTER);
+	
+	Pattern excel = new Pattern("C:\\Users\\Shobha\\eclipse-workspace\\ActiTime7to9\\excelsheet.png");
+	sc.click(excel);
+	}
+------------------------------------------------------------------------------------------------------------------------------
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.sikuli.script.FindFailed;
+import org.sikuli.script.Pattern;
+import org.sikuli.script.Screen;
+import org.testng.annotations.Test;
+
+public class SikuliExa {
+
+	@Test
+	public void m1() throws Throwable
+	{
+		WebDriver driver=new ChromeDriver();
+		driver.get("https://www.google.com/");
+		//svg:-Scalable vector Graphics
+		//syntax:-//*[name()='svg']
+		//driver.findElement(By.xpath("//*[name()='svg' and @class='gb_h']")).click();
+			driver.findElement(By.cssSelector("svg[class='gb_h'] ")).click();
+			
+			Screen scr = new Screen();
+			Pattern map = new Pattern("C:\\Users\\Shobha\\eclipse-workspace\\ActiTime7to9\\mapImg.png");
+	scr.click(map);
+	}
+}
+---------------------------------------------------------------------------------------------------------------------------------
+
+<dependency>
+    <groupId>org.seleniumhq.selenium</groupId>
+    <artifactId>selenium-java</artifactId>
+    <version>4.9.1</version>
+</dependency>
+
+<!-- https://mvnrepository.com/artifact/io.github.bonigarcia/webdrivermanager -->
+<dependency>
+    <groupId>io.github.bonigarcia</groupId>
+    <artifactId>webdrivermanager</artifactId>
+    <version>5.1.0</version>
+</dependency>
+
+<!-- https://mvnrepository.com/artifact/org.apache.poi/poi -->
+<dependency>
+    <groupId>org.apache.poi</groupId>
+    <artifactId>poi</artifactId>
+    <version>4.1.2</version>
+</dependency>
+
+<!-- https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml -->
+<dependency>
+    <groupId>org.apache.poi</groupId>
+    <artifactId>poi-ooxml</artifactId>
+    <version>4.1.2</version>
+</dependency>
+
+<!-- https://mvnrepository.com/artifact/org.testng/testng -->
+<dependency>
+    <groupId>org.testng</groupId>
+    <artifactId>testng</artifactId>
+    <version>7.1.0</version>
+    <scope>test</scope>
+</dependency>
+
+<!-- https://mvnrepository.com/artifact/com.sikulix/sikulixapi -->
+<dependency>
+    <groupId>com.sikulix</groupId>
+    <artifactId>sikulixapi</artifactId>
+    <version>2.0.5</version>
+</dependency>
+
+---------------------------------------------------------------------------------------------------------------------------
+
+}

@@ -1,0 +1,1139 @@
+CreateOrganization
+******************
+
+POM classes
+-----------
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindAll;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.FindBys;
+import org.openqa.selenium.support.PageFactory;
+
+public class Login1Page {
+
+//initialization
+	public Login1Page(WebDriver driver)
+	{
+		PageFactory.initElements(driver, this);
+	}
+	
+//Declartion
+	@FindBy(name="user_name")
+	private WebElement userTextField;
+	
+//@FindBys({@FindBy(xpath="//input[@type='password']"),@FindBy(name="user_password")})
+//private WebElement passwordTextField;
+	@FindBy(name="user_password")
+	private WebElement passwordTextField;
+	
+	
+//@FindAll({@FindBy(xpath="//input[@type='submit']"),@FindBy(id="submitButton")})
+//private WebElement loginButton;
+@FindAll({@FindBy(id="submitButton"),@FindBy(xpath="(//input[@value='Login'])[2]")})
+private WebElement loginButton;
+
+//getter Methods
+public WebElement getUserTextField() {
+	return userTextField;
+}
+
+public WebElement getPasswordTextField() {
+	return passwordTextField;
+}
+
+public WebElement getLoginButton() {
+	return loginButton;
+}
+
+//Business-Logics
+public void loginToApplication(String userNAme,String Password)
+{
+	userTextField.sendKeys(userNAme);
+	passwordTextField.sendKeys(Password);
+	loginButton.click();
+}
+}
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
+
+import Generic_Utilities.WebDriver_Utility;
+public class Home1Page {
+        //initalization
+		public Home1Page(WebDriver driver)
+		{
+			PageFactory.initElements(driver, this);
+		}
+		
+//Declartion
+		@FindBy(linkText="Organizations")
+		private WebElement OrganizationLink;
+		
+		@FindBy(xpath="//a[text()='Products']")
+		private WebElement ProductLink;
+		
+		@FindBy(linkText="More")
+		private WebElement moreLink;
+		
+		@FindBy(linkText="Campaigns")
+		private WebElement campaignsLink;
+		
+		@FindBy(xpath="//img[@src='themes/softed/images/user.PNG']")
+		private WebElement Administrator;
+		
+		@FindBy(xpath="//a[text()='Sign Out']")
+		private WebElement signout;
+		
+//gettermethod
+		public WebElement getOrganizationLink() {
+			return OrganizationLink;
+		}
+		public WebElement getAdministrator() {
+			return Administrator;
+		}
+		public WebElement getSignout() {
+			return signout;
+		}
+		public WebElement getProductLink() {
+			return ProductLink;
+		}
+		
+		public WebElement getMoreLink() {
+			return moreLink;
+		}
+		public WebElement getCampaignsLink() {
+			return campaignsLink;
+		}
+		
+//BusinessLogics
+		public void organizationLink()
+		{
+			OrganizationLink.click();
+		}
+		public void productLink()
+		{
+			ProductLink.click();
+		}
+		public void logout(WebDriver driver) {
+			WebDriver_Utility wlib=new WebDriver_Utility();
+			wlib.ActionsMoveToElement(driver, Administrator);
+			//Actions act = new Actions(driver);
+			//act.moveToElement(Administrator).perform();
+			signout.click();
+		}
+		
+		public void clickMoreLink(WebDriver driver)
+		{
+			WebDriver_Utility wlib=new WebDriver_Utility();
+		wlib.ActionsMoveToElement(driver, moreLink);
+		campaignsLink.click();
+		}
+		
+	}
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
+
+public class CreateOrganizationPage {
+
+public CreateOrganizationPage(WebDriver driver)
+{
+	PageFactory.initElements(driver, this);
+}
+
+@FindBy(xpath="//img[@alt='Create Organization...']")
+private WebElement CreateOrganizationImg;
+
+@FindBy(name="accountname")
+private WebElement OrganizationName;
+
+@FindBy(xpath="//input[@title='Save [Alt+S]']")
+private WebElement saveButton;
+
+//getter methods
+public WebElement getCreateOrganizationImg() {
+	return CreateOrganizationImg;
+}
+
+public WebElement getOrganizationName() {
+	return OrganizationName;
+}
+
+public WebElement getOrganizationPhoneNum() {
+	return OrganizationPhoneNum;
+}
+
+public WebElement getOrganizationEmailId() {
+	return OrganizationEmailId;
+}
+
+public WebElement getSaveButton() {
+	return saveButton;
+}
+
+//Business Logics
+
+public void clickOrgPlus()
+{
+	CreateOrganizationImg.click();
+}
+
+public void OrganizationData(String orgName)
+{
+	OrganizationName.sendKeys(orgName);
+	
+}
+public void clickSaveButton()
+{
+	saveButton.click();	
+}
+}
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+//Implementation
+
+public class CreateOrganizationTest {
+
+	public static void main(String[] args) throws Throwable {
+		//welcome
+		File_Utility flib=new File_Utility();
+		WebDriver driver;
+	   String BROWSER = flib.getKeyAndValue("browser");
+	   if(BROWSER.equalsIgnoreCase("chrome"))
+	   {
+		   WebDriverManager.chromedriver().setup();
+		   driver=new ChromeDriver();
+	   }
+	   else if (BROWSER.equalsIgnoreCase("firefox"))
+	   {
+		WebDriverManager.firefoxdriver().setup();
+		 driver=new FirefoxDriver();
+	}
+	   else if (BROWSER.equalsIgnoreCase("edge")) 
+	   {
+		WebDriverManager.edgedriver().setup();
+		 driver=new EdgeDriver();
+	}
+	   else
+	   {
+		   driver=new ChromeDriver();
+	   }
+
+	   
+	String URL = flib.getKeyAndValue("url");
+	String USERNAME = flib.getKeyAndValue("username");
+	String PASSWORD = flib.getKeyAndValue("password");
+/*	FileInputStream fis = new FileInputStream("./src/test/resources/AdvSeleCommonData.properties");
+	Properties pro = new Properties();
+	pro.load(fis);
+	String URL = pro.getProperty("url");
+	String USERNAME = pro.getProperty("username");
+	String PASSWORD = pro.getProperty("password");*/
+	driver.get(URL);
+	
+	//pom class implementing
+	Login1Page login1=new Login1Page(driver);
+	
+	//calling using getter methods
+	/*login1.getUserTextField().sendKeys(USERNAME);
+	login1.getPasswordTextField().sendKeys(PASSWORD);
+	login1.getLoginButton().click();*/
+	
+	//calling using Business Logics
+	login1.loginToApplication(USERNAME, PASSWORD);
+	
+	//driver.findElement(By.name("user_name")).sendKeys(USERNAME);
+	//driver.findElement(By.name("user_password")).sendKeys(PASSWORD);
+	 //driver.findElement(By.id("submitButton")).click();;
+		
+	HomePage home=new HomePage(driver);
+	home.clickOrganizationLink();
+	//driver.findElement(By.linkText("Organizations")).click();
+	CreateOrganizationPage org=new CreateOrganizationPage(driver);
+	org.clickOrgPlus();
+	//driver.findElement(By.xpath("//img[@alt='Create Organization...']")).click();
+	
+	Java_Utility jlib=new Java_Utility();
+	int ranNum = jlib.getRandomNum();
+	/*Random ran = new Random();
+     int ranNum = ran.nextInt(1000);*/
+	
+//	FileInputStream fes = new FileInputStream("./src/test/resources/AdvSelenium7to9am.xlsx");
+//	Workbook book = WorkbookFactory.create(fes);
+//	Sheet sheet = book.getSheet("Organization");
+//	Row row = sheet.getRow(0);
+//     Cell cell = row.getCell(0);
+//    String OrgName = cell.getStringCellValue()+ranNum;
+	
+	Excel_Utility elib=new Excel_Utility();
+	
+	//String OrgName = elib.getExcelData("Organization", 0, 0)+ranNum;
+	String OrgName = elib.getExcelDataUsingDataFormatter("Organization", 0, 0)+ranNum;
+	//driver.findElement(By.name("accountname")).sendKeys(OrgName);
+    Thread.sleep(2000);
+    
+   String orgNum = elib.getExcelDataUsingDataFormatter("Organization", 1, 0);
+  // driver.findElement(By.id("phone")).sendKeys(orgNum);
+    
+  
+ // driver.findElement(By.xpath("//input[@title='Save [Alt+S]']")).click();
+    org.getSaveButton().click();
+ 
+/*String actData = driver.findElement(By.xpath("//span[@id='dtlview_Organization Name']")).getText();
+ if(actData.contains(OrgName))
+ {
+	 System.out.println("pass");
+ }
+ else
+	 
+ {
+	 System.out.println("fail");
+ }*/
+ 
+/*	WebElement element = driver.findElement(By.xpath("//img[@src='themes/softed/images/user.PNG']"));
+	Actions act = new Actions(driver);
+	act.moveToElement(element).click().perform();
+	driver.findElement(By.linkText("Sign Out")).click();*/
+	Thread.sleep(2000);
+ home.logout(driver);
+    //driver.findElement(By.xpath("//img[@src='themes/softed/images/user.PNG']")).click();
+    //driver.findElement(By.linkText("Sign Out")).click();
+ }
+
+}
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+CreateCampaign:
+
+POM classes
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
+
+public class CreateCampaignsPage {
+
+	public CreateCampaignsPage(WebDriver driver)
+	{
+		PageFactory.initElements(driver, this);
+	}
+	
+	@FindBy(xpath="//img[@alt='Create Campaign...']")
+	private WebElement CampaignsPlus;
+	
+	@FindBy(name="campaignname")
+	private WebElement campaignsName;
+	
+	@FindBy(xpath="(//input[@title='Save [Alt+S]'])")
+	private WebElement saveButton;
+
+	public WebElement getCampaignsPlus() {
+		return CampaignsPlus;
+	}
+
+	public WebElement getCampaignsName() {
+		return campaignsName;
+	}
+
+	public WebElement getSaveButton() {
+		return saveButton;
+	}
+	
+	//Business Logics
+	public void clickCampPlusimg()
+	{
+		CampaignsPlus.click();
+	}
+	public void campaignsName(String campName)
+	{
+		campaignsName.sendKeys(campName);
+	}
+	public void clickSaveButton()
+	{
+		saveButton.click();
+	}
+	
+	
+}
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+//Implementation
+------------------
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.testng.annotations.Test;
+
+import Generic_Utilities.Excel_Utility;
+import Generic_Utilities.File_Utility;
+import Generic_Utilities.Java_Utility;
+import POMRepository.CreateCampaignsPage;
+import POMRepository.Home1Page;
+import POMRepository.LoginPage;
+import io.github.bonigarcia.wdm.WebDriverManager;
+
+public class CreateCampaignTest {
+
+	@Test
+	public void createCampaignTest() throws Throwable {
+		
+		WebDriverManager.chromedriver().setup();
+		WebDriver driver=new ChromeDriver();
+		
+		driver.manage().window().maximize();
+		//driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+		File_Utility flib=new File_Utility();
+		String URL = flib.getKeyAndValue("url");
+		String USERNAME = flib.getKeyAndValue("username");
+		String PASSWORD = flib.getKeyAndValue("password");
+
+		driver.get(URL);
+		LoginPage login=new LoginPage(driver);
+		login.logInToVtiger(USERNAME, PASSWORD);
+//		driver.findElement(By.name("user_name")).sendKeys(USERNAME);
+//		driver.findElement(By.name("user_password")).sendKeys(PASSWORD);
+//		driver.findElement(By.id("submitButton")).click();
+
+		Home1Page home=new Home1Page(driver);
+		//home.clickMoreLink();
+		//home.clickCampLink();
+		
+		/* WebElement moreLink = driver.findElement(By.linkText("More"));
+		Actions act = new Actions(driver);
+		act.moveToElement(moreLink).perform();
+		driver.findElement(By.linkText("Campaigns")).click();*/
+		home.clickMoreLink(driver);
+		
+		CreateCampaignsPage camp=new CreateCampaignsPage(driver);
+		camp.clickCampPlusimg();
+		//driver.findElement(By.xpath("//img[@alt='Create Campaign...']")).click();
+		
+		Java_Utility jlib=new Java_Utility();
+		int ranNum = jlib.getRandomNum();
+		
+		Excel_Utility elib=new Excel_Utility();
+		String CampaginName = elib.getExcelDataUsingDataFormatter("Campaigns", 0, 0)+ranNum;
+		camp.campaignsName(CampaginName);
+		//driver.findElement(By.name("campaignname")).sendKeys(CampaginName);
+	    
+		camp.clickSaveButton();
+	   // driver.findElement(By.xpath("(//input[@title='Save [Alt+S]'])")).click();
+		 Thread.sleep(2000);
+		 String Actdata = driver.findElement(By.xpath("//span[@id='dtlview_Campaign Name']")).getText();
+		if(Actdata.contains(CampaginName))
+		{
+			System.out.println("pass");
+			
+		}
+		else
+		{
+			System.out.println("fail");
+		}
+		 Thread.sleep(2000);
+		home.logout(driver);
+		 // driver.findElement(By.xpath("//img[@src='themes/softed/images/user.PNG']")).click();
+		 // driver.findElement(By.linkText("Sign Out")).click();
+	}
+
+	
+}
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+POM implementation for CreateCampaigns with Product
+
+Login Page and Home Page
+Reffer previous Program
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
+
+public class CreateProductPage {
+
+	 //initalization
+	public CreateProductPage(WebDriver driver)
+	{
+		PageFactory.initElements(driver, this);
+	}
+	
+	@FindBy(xpath="//img[@title='Create Product...']")
+	private WebElement ProductImg;
+	
+	@FindBy(name="productname")
+	private WebElement productName;
+	
+	@FindBy(xpath="(//input[@title='Save [Alt+S]'])[2]")
+	private WebElement saveButton;
+
+	public WebElement getProductImg() {
+		return ProductImg;
+	}
+
+	public WebElement getProductName() {
+		return productName;
+	}
+
+	public WebElement getSaveButton() {
+		return saveButton;
+	}
+	
+	public void clickProductImg()
+	{
+		ProductImg.click();
+	}
+	public void productName(String Name)
+	{
+		productName.sendKeys(Name);
+		}
+	public void clickSaveButton()
+	{
+		
+		saveButton.click();
+	}
+}
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
+
+public class CreateCampaignsPage {
+
+	public CreateCampaignsPage(WebDriver driver)
+	{
+		PageFactory.initElements(driver, this);
+	}
+	
+	@FindBy(xpath="//img[@alt='Create Campaign...']")
+	private WebElement CampaignsPlus;
+	
+	@FindBy(name="campaignname")
+	private WebElement campaignsName;
+	
+	@FindBy(xpath="(//input[@title='Save [Alt+S]'])")
+	private WebElement saveButton;
+
+	public WebElement getCampaignsPlus() {
+		return CampaignsPlus;
+	}
+
+	public WebElement getCampaignsName() {
+		return campaignsName;
+	}
+
+	public WebElement getSaveButton() {
+		return saveButton;
+	}
+	
+	//Business Logics
+	public void clickCampPlusimg()
+	{
+		CampaignsPlus.click();
+	}
+	public void campaignsName(String campName)
+	{
+		campaignsName.sendKeys(campName);
+	}
+	public void clickSaveButton()
+	{
+		saveButton.click();
+	}
+	
+	
+}
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
+import Generic_Utilities.WebDriver_Utility;
+
+public class ProductWindowPage {
+
+	public ProductWindowPage(WebDriver driver)
+	{
+		PageFactory.initElements(driver, this);
+	}
+	
+	@FindBy(xpath="//img[@alt='Select']")
+	private WebElement selectPlusSign;
+
+	@FindBy(xpath="//input[@name='search_text']")
+	private WebElement ProductTextBox;
+	
+	@FindBy(xpath="//input[@name='search']")
+	private WebElement ProductSearchButton;
+	
+	//getter Methods
+	public WebElement getSelectPlusSign() {
+		return selectPlusSign;
+	}
+   
+	public WebElement getProductTextBox() {
+		return ProductTextBox;
+	}
+    
+	public WebElement getProductSearchButton() {
+		return ProductSearchButton;
+	}
+
+	//Business Logics
+    public void clickOnSelectSign(WebDriver driver,WebDriver_Utility wlib)
+	{
+		selectPlusSign.click();
+		wlib.switchWindow(driver,"Products&action");
+	}
+	
+	public void productName(String PrdName)
+	{
+		ProductTextBox.sendKeys(PrdName);
+	}
+	
+	public void searchPrdData()
+	{
+		ProductSearchButton.click();
+	}
+	public void selectProduct(WebDriver driver,String ProductName,WebDriver_Utility wlib)
+	{
+		driver.findElement(By.xpath("//a[text()='"+ProductName+"']")).click();
+		wlib.switchWindow(driver, "Campaigns&action");
+	}
+}
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.time.Duration;
+import java.util.Iterator;
+import java.util.Properties;
+import java.util.Random;
+import java.util.Set;
+
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Rectangle;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.testng.annotations.Test;
+
+import Generic_Utilities.Excel_Utility;
+import Generic_Utilities.File_Utility;
+import Generic_Utilities.Java_Utility;
+import Generic_Utilities.WebDriver_Utility;
+import POMRepository.CreateCampaignsPage;
+import POMRepository.CreateProductPage;
+import POMRepository.Home1Page;
+import POMRepository.LoginPage;
+import POMRepository.ProductWindowPage;
+import io.github.bonigarcia.wdm.WebDriverManager;
+
+
+public class CreateCampaignWithProduct {
+
+	@Test
+//	public static void main(String[] args) throws Throwable {x
+	public void createCampaignWithProduct() throws Throwable
+	{
+		WebDriverManager.chromedriver().setup();
+WebDriver driver=new ChromeDriver();
+         File_Utility flib=new File_Utility();
+         Java_Utility jlib=new Java_Utility();
+         Excel_Utility elib=new Excel_Utility();
+         WebDriver_Utility wlib=new WebDriver_Utility();
+         
+        wlib.maximizeScreen(driver);
+		wlib.implicitwait(driver);
+	    String URL = flib.getKeyAndValue("url");
+		String USERNAME = flib.getKeyAndValue("username");
+		String PASSWORD = flib.getKeyAndValue("password");
+		
+		driver.get(URL);
+		LoginPage login=new LoginPage(driver);
+		login.logInToVtiger(USERNAME, PASSWORD);
+//		driver.findElement(By.name("user_name")).sendKeys(USERNAME);
+//		driver.findElement(By.name("user_password")).sendKeys(PASSWORD);
+//		driver.findElement(By.id("submitButton")).click();
+		Home1Page home=new Home1Page(driver);
+		home.productLink();
+		//driver.findElement(By.linkText("Products")).click();
+        
+		CreateProductPage product=new CreateProductPage(driver);
+		product.clickProductImg();
+		//driver.findElement(By.xpath("//img[@alt='Create Product...']")).click();
+        
+        int ranNum = jlib.getRandomNum();
+        String ProductName = elib.getExcelDataUsingDataFormatter("Product", 0, 0)+ranNum;
+        
+        product.productName(ProductName);
+	   // driver.findElement(By.name("productname")).sendKeys(ProductName);
+	    Thread.sleep(2000);
+	    product.clickSaveButton();
+	  // driver.findElement(By.xpath("(//input[@title='Save [Alt+S]'])")).click();
+	
+	    home.clickMoreLink(driver);
+	 // driver.findElement(By.linkText("More")).click();
+	  // driver.findElement(By.linkText("Campaigns")).click();
+	    
+	    CreateCampaignsPage campaigns=new CreateCampaignsPage(driver);
+	    campaigns.clickCampPlusimg();
+	// driver.findElement(By.xpath("//img[@alt='Create Campaign...']")).click();
+	    
+	    
+	    ProductWindowPage prdWindow=new ProductWindowPage(driver);
+	    prdWindow.clickOnSelectSign(driver, wlib);
+	  // driver.findElement(By.xpath("//img[@alt='Select']")).click();
+	
+    	//wlib.switchWindow(driver,"Products&action");
+
+	Thread.sleep(1000);
+	prdWindow.productName(ProductName);
+	//driver.findElement(By.xpath("//input[@name='search_text']")).sendKeys(ProductName);
+	prdWindow.searchPrdData();
+	//driver.findElement(By.xpath("//input[@name='search']")).click();
+	
+	//    "+value+"
+	//driver.findElement(By.xpath("//a[text()='"+ProductName+"']")).click();
+	prdWindow.selectProduct(driver, ProductName, wlib);
+	//driver.findElement(By.xpath("//a[text()='"+ProductName+"']")).click();
+	
+	//wlib.switchWindow(driver, "Campaigns&action");
+
+	String CampaginName = elib.getExcelDataUsingDataFormatter("Campaigns", 0, 0)+ranNum;
+	
+	campaigns.campaignsName(CampaginName);
+  // driver.findElement(By.name("campaignname")).sendKeys(CampaginName);
+   
+	campaigns.clickSaveButton();
+  // driver.findElement(By.xpath("(//input[@title='Save [Alt+S]'])")).click();
+	
+   Thread.sleep(2000);
+   home.logout(driver);
+	 //driver.findElement(By.xpath("//img[@src='themes/softed/images/user.PNG']")).click();
+	   // driver.findElement(By.linkText("Sign Out")).click();
+	}
+
+}
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+CreateProduct:
+
+POM class
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
+
+public class CreateProductPage {
+
+	 //initalization
+	public CreateProductPage(WebDriver driver)
+	{
+		PageFactory.initElements(driver, this);
+	}
+	
+	@FindBy(xpath="//img[@title='Create Product...']")
+	private WebElement ProductImg;
+	
+	@FindBy(name="productname")
+	private WebElement productName;
+	
+	@FindBy(xpath="(//input[@title='Save [Alt+S]'])[2]")
+	private WebElement saveButton;
+
+	public WebElement getProductImg() {
+		return ProductImg;
+	}
+
+	public WebElement getProductName() {
+		return productName;
+	}
+
+	public WebElement getSaveButton() {
+		return saveButton;
+	}
+	
+	public void clickProductImg()
+	{
+		ProductImg.click();
+	}
+	public void productName(String Name)
+	{
+		productName.sendKeys(Name);
+		}
+	public void clickSaveButton()
+	{
+		
+		saveButton.click();
+	}
+}
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+import java.io.FileInputStream;
+import java.time.Duration;
+import java.util.Properties;
+import java.util.Random;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.Rectangle;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+
+import Generic_Utilities.Excel_Utility;
+import Generic_Utilities.File_Utility;
+import Generic_Utilities.WebDriver_Utility;
+import POMRepository.CreateProductPage;
+import POMRepository.HomePage;
+import POMRepository.LoginPage;
+
+public class CreateProduct {
+
+	public static void main(String[] args) throws Throwable {
+	
+		//welcome hello
+		WebDriver driver=new ChromeDriver();
+		driver.manage().window().maximize();
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+		File_Utility flib=new File_Utility();
+		String URL = flib.getKeyAndValue("url");
+		String USERNAME = flib.getKeyAndValue("username");
+		String PASSWORD = flib.getKeyAndValue("password");
+	
+		/*FileInputStream fis = new FileInputStream("./src/test/resources/AdvSeleCommonData.properties");
+		Properties pro = new Properties();
+		pro.load(fis);
+		String URL = pro.getProperty("url");
+		String USERNAME = pro.getProperty("username");
+		String PASSWORD = pro.getProperty("password");*/
+		
+		driver.get(URL);
+		LoginPage login=new LoginPage(driver);
+		login.logInToVtiger(USERNAME, PASSWORD);
+//		driver.findElement(By.name("user_name")).sendKeys(USERNAME);
+//		driver.findElement(By.name("user_password")).sendKeys(PASSWORD);
+//		driver.findElement(By.id("submitButton")).click();
+		
+		HomePage home=new HomePage(driver);
+		home.clickProductLink();
+		//driver.findElement(By.linkText("Products")).click();
+		CreateProductPage product=new CreateProductPage(driver);
+		product.clickProductImg();
+		//driver.findElement(By.xpath("//img[@title='Create Product...']")).click();
+		
+		Random ran = new Random();
+	     int ranNum = ran.nextInt(1000);
+		
+		/*FileInputStream fes = new FileInputStream("./src/test/resources/AdvSelenium7to9am.xlsx");
+		Workbook book = WorkbookFactory.create(fes);
+		Sheet sheet = book.getSheet("Product");
+		Row row = sheet.getRow(0);
+	     Cell cell = row.getCell(0);
+	    String ProductName = cell.getStringCellValue()+ranNum;*/
+	    
+	    Excel_Utility elib=new Excel_Utility();
+	    String ProdName = elib.getExcelDataUsingDataFormatter("Product", 0, 0)+ranNum;
+	    product.productName(ProdName);
+	  // driver.findElement(By.name("productname")).sendKeys(ProductName);
+	    product.clickSaveButton();
+	//WebElement saveButton = driver.findElement(By.xpath("(//input[@title='Save [Alt+S]'])[2]"));
+	
+	//WebDriver_Utility wlib=new WebDriver_Utility();
+	//wlib.scrollPAge(driver, saveButton);
+	/*Rectangle rect = saveButton.getRect();
+	System.out.println(rect.getX());
+	System.out.println(rect.getY());
+	
+	JavascriptExecutor js = (JavascriptExecutor)driver;
+	js.executeScript("window.scrollBy(0,1152)");*/
+	
+	// driver.findElement(By.xpath("(//input[@title='Save [Alt+S]'])[2]")).click();
+	
+	    Thread.sleep(2000);
+	    home.logout(driver);
+	 //driver.findElement(By.xpath("//img[@src='themes/softed/images/user.PNG']")).click();
+	  //  driver.findElement(By.linkText("Sign Out")).click();
+	
+	}
+
+}
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------CreateProduct and Delete Product
+
+package POMRepository;
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
+
+public class CreateProductPage {
+
+	 //initalization
+	public CreateProductPage(WebDriver driver)
+	{
+		PageFactory.initElements(driver, this);
+	}
+	
+	@FindBy(xpath="//img[@title='Create Product...']")
+	private WebElement ProductImg;
+	
+	@FindBy(name="productname")
+	private WebElement productName;
+	
+	@FindBy(xpath="(//input[@title='Save [Alt+S]'])[2]")
+	private WebElement saveButton;
+
+	public WebElement getProductImg() {
+		return ProductImg;
+	}
+
+	public WebElement getProductName() {
+		return productName;
+	}
+
+	public WebElement getSaveButton() {
+		return saveButton;
+	}
+	
+	public void clickProductImg()
+	{
+		ProductImg.click();
+	}
+	public void productName(String Name)
+	{
+		productName.sendKeys(Name);
+		}
+	public void clickSaveButton()
+	{
+		
+		saveButton.click();
+	}
+}
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
+
+import Generic_Utilities.WebDriver_Utility;
+
+public class ProductValidationPage {
+
+	public ProductValidationPage(WebDriver driver)
+	{
+		PageFactory.initElements(driver, this);
+	}
+	
+	@FindBy(xpath="(//input[@value='Delete'])[1]")
+	private WebElement deletePrd;
+	
+	//Business Logics
+	public void checkPrdName(WebDriver driver,String ProductName)
+	{
+		driver.findElement(By.xpath("//table[@class='lvt small']/tbody/tr//td//a[text()='"+ProductName+"']"
+				+ "/../preceding-sibling::td/input")).click();
+	}
+	public void deletePrdClick(WebDriver driver,WebDriver_Utility wlib)
+	{
+		deletePrd.click();
+		wlib.Alertaccept(driver);
+	}
+}
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+DeleteProduct VAlidation:
+
+import java.util.List;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
+
+public class DeleteProductPage {
+       //initalization
+		public DeleteProductPage(WebDriver driver)
+		{
+			PageFactory.initElements(driver, this);
+		}
+		//Declaration
+		@FindBy(xpath="//a[text()='Products']")
+		private WebElement navigateProductTable;
+		
+		@FindBy(xpath="//input[@value='Delete']")
+		private WebElement DeleteProduct;
+
+		//gettermethods
+		public WebElement getNavigateProductTable() {
+			return navigateProductTable;
+		}
+
+		public WebElement getDeleteProduct() {
+			return DeleteProduct;
+		}
+		//BusinessLogics
+		public void productTable()
+		{
+			navigateProductTable.click();
+		}
+		public void deletePrdData( )
+		{
+			DeleteProduct.click();
+		}
+
+		public void validateProduct(WebDriver driver,String productData )
+		{
+		List<WebElement> productList = driver.findElements(By.xpath("(//table[@class='lvt small']/tbody/tr/td[3])[position()>1]"));
+
+			 boolean flag=false;
+			 
+			 for(WebElement prdName:productList)
+			 {
+				String actData = prdName.getText();
+				if(actData.contains(productData))//	Markerting293.contains(iphone)
+				{
+					flag=true;
+					break;
+				}
+			 }
+			if(flag)
+			{
+				System.out.println("product data is deleted");
+			}
+			else
+			{
+				System.out.println("product data not deleted");
+			}
+		}
+	}
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+public class CreateProductAndDeleteProduct1 {
+
+	public static void main(String[] args) throws Throwable {
+		WebDriver driver=new ChromeDriver();
+		WebDriver_Utility wlib=new WebDriver_Utility();
+		driver.manage().window().maximize();
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+		File_Utility flib=new File_Utility();
+		String URL = flib.getKeyAndValue("url");
+		String USERNAME = flib.getKeyAndValue("username");
+		String PASSWORD = flib.getKeyAndValue("password");
+	/*	FileInputStream fis = new FileInputStream("./src/test/resources/AdvSeleCommonData.properties");
+		Properties pro = new Properties();
+		pro.load(fis);
+		String URL = pro.getProperty("url");
+		String USERNAME = pro.getProperty("username");
+		String PASSWORD = pro.getProperty("password");*/
+		
+		driver.get(URL);
+		LoginPage login=new LoginPage(driver);
+		login.logInToVtiger(USERNAME, PASSWORD);
+		//driver.findElement(By.name("user_name")).sendKeys(USERNAME);
+		//driver.findElement(By.name("user_password")).sendKeys(PASSWORD);
+		//driver.findElement(By.id("submitButton")).click();
+		
+		Home1Page home=new Home1Page(driver);
+		home.productLink();
+		//driver.findElement(By.linkText("Products")).click();
+		CreateProductPage product=new CreateProductPage(driver);
+		product.clickProductImg();
+	   //driver.findElement(By.xpath("//img[@title='Create Product...']")).click();
+		
+		Java_Utility jlib=new Java_Utility();
+		int ranNum = jlib.getRandomNum();
+		//Random ran = new Random();
+	     //int ranNum = ran.nextInt(1000);
+		
+	     Excel_Utility elib = new Excel_Utility();
+	     String ProductName=elib.getExcelDataUsingDataFormatter("Product", 0, 0)+ranNum;
+	     
+//		FileInputStream fes = new FileInputStream("./src/test/resources/AdvSelenium7to9am.xlsx");
+//		Workbook book = WorkbookFactory.create(fes);
+//		Sheet sheet = book.getSheet("Product");
+//		Row row = sheet.getRow(0);
+//	     Cell cell = row.getCell(0);
+//	    String ProductName = cell.getStringCellValue()+ranNum;
+	    
+	    product.productName(ProductName);
+	   // driver.findElement(By.name("productname")).sendKeys(ProductName);
+	    Thread.sleep(2000);
+	    product.clickSaveButton();
+	  //driver.findElement(By.xpath("(//input[@title='Save [Alt+S]'])")).click();
+
+	home.productLink();
+	   // driver.findElement(By.linkText("Products")).click();
+	
+	ProductValidationPage deletePrd=new ProductValidationPage(driver);
+	deletePrd.checkPrdName(driver, ProductName);
+	
+	//driver.findElement(By.xpath("//table[@class='lvt small']/tbody/tr//td//a[text()='"+ProductName+"']"
+	//		+ "/../preceding-sibling::td/input")).click();
+	deletePrd.deletePrdClick(driver, wlib);
+	//driver.findElement(By.xpath("(//input[@value='Delete'])[1]")).click();
+	
+	//WebDriver_Utility wlib=new WebDriver_Utility();
+	//wlib.Alertaccept(driver);
+	//Alert alt = driver.switchTo().alert();
+	//alt.accept();
+	
+	 Thread.sleep(2000);
+	//validation
+// List<WebElement> productList = driver.findElements(By.xpath("(//table[@class='lvt small']/tbody/tr/td[3])[position()>1]"));
+//
+// boolean flag=false;
+// 
+// for(WebElement prdName:productList)
+// {
+//	String actData = prdName.getText();
+//	if(actData.contains(productData))//	Markerting293.contains(iphone)
+//	{
+//		flag=true;
+//		break;
+//	}
+// }
+//if(flag)
+//{
+//	System.out.println("product data is deleted");
+//}
+//else
+//{
+//	System.out.println("product data not deleted");
+//}
+DeleteProductPage page=new DeleteProductPage(driver);
+page.validateProduct(driver, productData);
+	home.logout(driver);
+//	 driver.findElement(By.xpath("//img[@src='themes/softed/images/user.PNG']")).click();
+//	    driver.findElement(By.linkText("Sign Out")).click();
+	}
+
+}
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+

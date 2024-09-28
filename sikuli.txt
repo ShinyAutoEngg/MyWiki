@@ -1,0 +1,28 @@
+
+1.First we add dependceny
+https://mvnrepository.com/
+search  - SikuliX API
+Version  » 2.0.5
+
+2.Create a class
+3.Object creation of screen
+4.Call the snipping tool and
+* take a screenshot
+* + icon 
+* take a snap - img appears in the tool
+* save with .png extension
+Ex: minimize screen for now - save as name.png and save in a location
+5. write the path for this
+6.create an object for Pattern
+7. new Pattern(String imgPath)
+8. new Pattern("give the path of the img location")
+9. Save this path in a variable with return type Pattern
+10.pass the variable inside scr.click()
+
+for clicking - click()
+for typing - type()
+
+for entering - call the robot class by creating an object 
+Robot robot = new Robot()
+robot.keyPress(KeyEvent.VK_ENTER)
+robot.keyPress(KeyRelease.VK_ENTER)

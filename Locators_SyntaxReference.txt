@@ -1,0 +1,75 @@
+1.path by Attribute:
+====================
+//tagname[@Attribute name=’Attribute value’]
+
+X path syntaxes:
+=================
+Xpath Attribute:
+-----------------
+//tagname[@Attributename=’Attributevalue’]
+
+Xpath text:
+------------
+//tagname[text()=’text value’]
+
+
+
+2. X path by contains:
+==================
+It has two syntaxs
+
+1.X path contains with respect to Attributes:
+---------------------------------------------
+//tagname[contains(@Attributename,’Attributevalue’)]
+
+2.X path contains with respect to text:
+---------------------------------------
+//tagname[contains(text(),’text value’)]
+
+3.X path by traversing:
+========================
+/ --->used for Traversing from parent to immediate
+child
+//---> used for Traversing from parent to any child
+/.. --> used for Traversing from child to parent
+
+4.X path by group Index:
+========================
+(X path expression)[position value]
+
+Usage in script
+==================
+driver.findElement(By.id(“attribute value”));
+driver.findElement(By.name(“attribute value”));
+driver.findElement(By.linkText(“attribute value”);
+driver.findElement(By.partialLinkText(“partial attribute value”));
+driver.findElements(By.tagName(“attribute value”));
+driver.findElement(By.className(“attribute value”));
+driver.findElement(By.xpath(“xpathlink”));
+
+
+SELF 
+======
+//tagName[@AN='AV']/self::tagName
+
+PARENT
+=========
+//tagName[@AN='AV']/parent::tagName
+
+CHILD
+======
+//tagName[@AN='AV']/child::tagName
+
+PRECEDING-SIBLING
+=================
+//tagName[@AN='AV']/preceding-sibling::tagName(of the sibling)
+
+FOLLOWING SIBLING  
+==================
+//tagName[@AN='AV']/following-sibling::tagName(of the sibling)
+
+TO FIND THE NUMBER OF SIBLINGS AVAILABLE
+=========================================
+//tagName[@AN='AV']/preceding-sibling::*
+//tagName[@AN='AV']/following-sibling::*
+Give the position value [1] or [2] based on the requirement

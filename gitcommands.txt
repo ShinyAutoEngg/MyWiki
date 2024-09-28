@@ -39,7 +39,7 @@ Save or Exit from bash editor :wq! and Press enter
 
 5. git add .   -->move all files from unstaged to staged
 
-6. 
+6. git add -A   --->to push a folder (need to try)
 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 git log --graph --oneline --all 
@@ -135,6 +135,11 @@ Navigate into the folder
 Right click - show more options - Gitbash here
 follow the usual pushing steps
 
+HOW TO SET THE POST BUFFER SIZE
+================================
+To set to 500 MB , the byte code of 500 MB is 524288000. Use the command as follows
+git config --global http.postBuffer 524288000
+
 REBASE  
 ======
 git rebase branch1 branch2  --->from which branch to which branch
@@ -158,6 +163,8 @@ git stash pop 1  ------>give the stash number to
 
 HOW TO HANDLE?
 ===============
+1. Permission Issue
+------------------
 $ git push -u origin master
 remote: Permission to ShinyAutoEngg/GitBashRepo.git denied to shinyingrid.
 fatal: unable to access 'https://github.com/ShinyAutoEngg/GitBashRepo.git/': The requested URL returned error: 403
@@ -167,3 +174,10 @@ fatal: unable to access 'https://github.com/ShinyAutoEngg/GitBashRepo.git/': The
 4.try to push again - it will ask to sign in to GitHub using browser
 5. Allow Authentication and login 
 6.Now try to push again 
+
+2. error: RPC failed; curl 92 HTTP/2 stream 0 was not closed cleanly: PROTOCOL_ERROR (err 1)
+---------------------------------------------------------------------------------------------
+Reason : file size is large | Incorrect Branch | Wifi issue
+
+
+

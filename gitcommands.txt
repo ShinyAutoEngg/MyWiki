@@ -129,6 +129,12 @@ git branch -d branchName  (this will delete only from local folder)
 Message: deleted my new branch  (only in local not in GitHub)
 git push origin --delete branchName
 
+HOW TO PUSH FILES FROM FOLDER
+=============================
+Navigate into the folder
+Right click - show more options - Gitbash here
+follow the usual pushing steps
+
 REBASE  
 ======
 git rebase branch1 branch2  --->from which branch to which branch

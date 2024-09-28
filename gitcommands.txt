@@ -15,14 +15,12 @@ git push origin master
 ------------------------------------------------------------------
 1.git init ----->creates the .git folder in local repo | Initialises local repo
 
-
 2. touch Filename.txt -----> to create a text file
 flow
 -----
 touch Filename.txt
 add .
 git commit -m "message"
-
 
 3.vim filename.txt  -----> to create a text file
 Flow
@@ -33,7 +31,6 @@ Write in the file
 Press escape
 type :wq! and press enter to save the file
 Save or Exit from bash editor :wq! and Press enter
-
 
 4. git add filename  -->move file from unstaged to staged 
 
